@@ -247,7 +247,7 @@ if ($_POST != NULL) {
                             </div>
                         <?php } ?>
                     </div>
-<!-- test -->
+<!-- test123 -->
                     <div class="uitleenaanvragenknop">
                         <input type="submit" class="uitleenaanvragenbutton" name="action" value="Aanvragen">
                     </div>
