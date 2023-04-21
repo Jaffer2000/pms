@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 900 900" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:vectornator="http://vectornator.io" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<linearGradient gradientTransform="matrix(1 0 0 1 0 0)" gradientUnits="userSpaceOnUse" id="LinearGradient" x1="151.129" x2="748.871" y1="450" y2="450">
+<stop offset="0" stop-color="#ff9900"/>
+<stop offset="0.970552" stop-color="#ff7600"/>
+</linearGradient>
+</defs>
+<g id="Layer-1" vectornator:layerName="Layer 1">
+<path d="M706.154 46.058C693.344 46.2158 682.435 50.4501 682.435 50.4501C682.435 50.4502 580.161 79.1179 421.76 202.338C332.101 272.084 148.257 426.768 151.163 487.428C152.281 510.757 242.646 584.622 370.369 679.723C498.357 775.022 677.087 849.978 677.087 849.978C677.087 849.978 734.881 866.303 745.143 832.729C758.532 788.926 725.455 775.552 725.455 775.552L653.368 739.616C653.368 739.616 749.855 594.88 748.863 448.218C747.872 301.556 649.647 152.907 649.647 152.907L724.68 117.77C724.68 117.769 760.266 100.774 742.43 66.4215C733.862 49.9188 718.964 45.9002 706.154 46.058ZM565.933 205.133C565.933 205.133 580.941 213.132 590.738 227.892C600.535 242.653 605.232 264.147 605.232 264.147C605.232 264.147 465.594 359.509 465.089 464.668C464.5 587.536 603.604 663.832 603.605 663.832C603.605 663.832 597.658 676.936 589.652 687.949C581.647 698.961 571.592 707.753 571.592 707.753C571.592 707.753 255.263 510.829 255.263 475.689C255.263 432.162 565.934 205.133 565.933 205.133ZM637.555 341.928C637.555 341.928 648.252 368.508 648.252 464.668C648.252 537.742 637.555 587.408 637.555 587.409C637.555 587.409 554.781 526.152 554.694 464.668C554.621 413.141 637.555 341.928 637.555 341.928Z" fill="url(#LinearGradient)" fill-rule="nonzero" opacity="1" stroke="none"/>
+</g>
+</svg>
