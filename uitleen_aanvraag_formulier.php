@@ -231,8 +231,8 @@ if ($_POST != NULL) {
                                 <td><input type="date" id="datumtot" name="datumtot" required></td>
                             </tr>
                             <tr>
-                                <td><label for="aanvraagnaam"><b>Je naam:</b></label></td>
-                                <td><input type="text" class="aanvraagformnaam" id="naam" name="naamaanvraag" required></td>
+                                <td><label for="naamaanvraag"><b>Je naam:</b></label></td>
+                                <td><input type="text" class="aanvraagformnaam" id="naamaanvraag" name="naamaanvraag" required></td>
                             </tr>
                         </table>
                     </div>

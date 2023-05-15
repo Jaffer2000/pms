@@ -53,18 +53,21 @@ class UitleenAanvraag {
      * @param $userid
      * @param $datumvan
      * @param $datumtot
+     * @param $naamaanvraag
      * @return array|void
      */
-	public function createAanvraag($userid, $datumvan, $datumtot)
+	public function createAanvraag($userid, $datumvan, $datumtot, $naamaanvraag)
     {
         // maak aanvraag aan
+
         try {
-            $sql = $this->connect()->prepare("INSERT INTO aanvragen (user_id, datum_van, datum_tot) VALUES (?, ?, ?)");
-            $sql->bind_param("iss", $userid, $datumvan, $datumtot);
+            $sql = $this->connect()->prepare("INSERT INTO aanvragen (user_id, datum_van, datum_tot, naamaanvraag) VALUES ($userid, $datumvan, $datumtot, '$naamaanvraag');");
             $sql->execute();
+            $sql->close();
 
             $aanvraag_id = new Database();
             $aanvraag_id = $aanvraag_id->getLastInsertedId();
+
 
         } catch (Exception $e) {
 
@@ -72,7 +75,6 @@ class UitleenAanvraag {
             echo $e->getMessage();
             die;
         }
-
         return [true, $aanvraag_id];
 	}
 
@@ -216,4 +218,22 @@ class UitleenAanvraag {
 
         return true;
 	}
+
+    public function getAllNaam()
+    {
+        // get all naam van aanvraag
+        try {
+            $sql = "SELECT 'naamaanvraag' FROM `aanvragen` ORDER BY aanvraag_id DESC LIMIT 30";
+            $naamaanvraag = mysqli_query($this->connect(), $sql);
+        }catch (Exception $e){
+
+            // echo error message
+            echo $e->getMessage();
+            die;
+        }
+
+    return $naamaanvraag;
+}
+
+
 }

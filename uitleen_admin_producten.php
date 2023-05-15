@@ -1,5 +1,6 @@
 <?php require_once("config/db_config.php");
 require_once("model/UitleenProduct.php");
+require_once("model/User.php");
 
 session_start();
 // Als de admin niet is ingelogd verwijzen we door naar de inlogpagina

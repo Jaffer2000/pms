@@ -155,11 +155,12 @@ if ($_POST != NULL) {
                         <article class="uitleenaanvraag">
                             <?php
                             $naam = new User();
-                            $naam = $naam->getUserUsername($aanvraag['naamaanvraag']);?>
-                            <h2> <?php echo $naam ?>
+                            $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);?>
+                            <h2> <?php echo $naamaanvraag ?></h2>
                             <div class="uitleenaanvraagdatums">
                                 <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
-                                <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b>
+                                <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b><br>
+                                <b>Status: </b>
                             </div>
                             <div class="uitleenaanvraagproducten">
                                 <?php $producten = new UitleenAanvraag();
