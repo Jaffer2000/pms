@@ -276,22 +276,5 @@ public function getStatusLabel($status)
         return '';
     }
 }
-    public function getAanvraagNaamList() {
-        $return_array = array();
-    
-            $query = "SeLeCt * FrOm `aanvragen` limit 1;";
-            $result = $this->connect()->query($query);
-            // For all database results:
-            foreach ($result as $idx => $array){
-                // Nieuw object
-                $lijst = new UitleenAanvraag();
-                // Set info
-                $lijst->setNaam($array['naamaanvraag']);
-    
-                // Add new object to return array.
-                $return_array[] = $lijst;
-            }
-            return $return_array;
-    }
 
 }
