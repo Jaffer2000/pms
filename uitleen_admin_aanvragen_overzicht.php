@@ -227,16 +227,23 @@ function getStatusLabel($status)
                     </div>
                     <?php echo '<div class="pagination">';
                     if ($page > 1) {
-                        echo '<a href="?page=' . ($page - 1) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
+                        echo '<a href="?page=' . ($page - 1) . '" style="color: var(--main-color); margin-right: 20px;">&lt;</a>';
                     }
                     for ($i = 1; $i <= $totalPages; $i++) {
-                        echo '<a href="?page=' . $i . '" style="color: var(--main-color); margin-right:10px;">' . $i . '</a>';
+                        if ($totalPages > 3 && $i === 4) {
+                            echo '<span style="color: var(--main-color); margin-right: 20px;">...</span>';
+                        }
+                        if ($i === 1 || $i === $totalPages || abs($i - $page) <= 1 || ($totalPages > 3 && abs($i - $page) === 2)) {
+                            $activeClass = ($i == $page) ? 'active' : '';
+                            echo '<a href="?page=' . $i . '" class="' . $activeClass . '" style="color: var(--main-color); margin-right: 20px;">' . $i . '</a>';
+                        }
                     }
                     if ($page < $totalPages) {
-                        echo '<a href="?page=' . ($page + 1) . '" style="color: var(--main-color); margin-left:10px;">></a>';
+                        echo '<a href="?page=' . ($page + 1) . '" style="color: var(--main-color); margin-left: 10px;">&gt;</a>';
                     }
-                
-                    echo '</div>'; ?>
+
+                    echo '</div>';
+                    ?>
                 </div>
             </div>
         </div>
