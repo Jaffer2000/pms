@@ -1,8 +1,7 @@
 <?php require_once("config/db_config.php");
 require_once("model/UitleenAanvraag.php");
 require_once("model/User.php");
-$aanvraag = new UitleenAanvraag();
-$aanvraagList = $aanvraag->getAllAanvragen();
+
 session_start();
 // Als de admin niet is ingelogd verwijzen we door naar de inlogpagina
 if (!isset($_SESSION['loggedinadmin'])) {
@@ -11,6 +10,7 @@ if (!isset($_SESSION['loggedinadmin'])) {
 }
 
 if ($_POST != NULL) {
+    $aanvraag = new UitleenAanvraag();
     if ($_POST['action'] == 'Goedkeuren') {
         $aanvraag->approveAanvraag($_POST['aanvraag_id']);
     }
@@ -22,6 +22,18 @@ if ($_POST != NULL) {
     }
 }
 
+function getStatusLabel($status)
+{
+    if ($status == 1) {
+        return 'Goedgekeurd';
+    } elseif ($status == 2) {
+        return 'Ingeleverd';
+    } elseif ($status == 3) {
+        return 'Afgekeurd';
+    } else {
+        return '';
+    }
+}
 
 ?>
 
@@ -173,26 +185,27 @@ if ($_POST != NULL) {
                         $start = ($page - 1) * $perPage;
                         $end = $start + $perPage;
                         $currentPageAanvragen = array_slice($aanvragen->getAllAanvragen(), $start, $perPage);
-                        foreach ($aanvraagList as $obj) {
-                            $obj['datum_van'] = date("d-m-Y", strtotime($obj['datum_van']));
-                            $obj['datum_tot'] = date("d-m-Y", strtotime($obj['datum_tot']));?>
-                            <article class="uitleenaanvraag">
-                                <?php
-                                foreach($aanvraag->getAanvraagNaamList() as $aobj){
-                                        echo $aobj->getNaam();
-                                }
-                                ?>
-                                <div class="uitleenaanvraagdatums">
-                                    <b>Datum van: <?php echo $obj['datum_van'] ?></b><br>
-                                    <b>Datum tot: <?php echo $obj['datum_tot'] ?></b><br>
-                                    <b>Status: <?php echo $aanvraag->getStatusLabel($obj['status']);
-                                    ?>
-                                     </b>
-                                </div>
-                                <div class="uitleenaanvraagproducten">
-                                    <?php $producten = new UitleenAanvraag();
-                                    foreach ($producten->getAanvraagProducten($obj['aanvraag_id']) as $product) { ?>
-                                    <div class="uitleenaanvraagproduct">
+                        foreach ($currentPageAanvragen as $aanvraag) {
+                        $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
+                        $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));?>
+                        <article class="uitleenaanvraag">
+                            <?php
+                            $naam = new User();
+                            $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
+                            //var_dump($naamaanvraag);
+                            ?>
+                            <h2> <?php echo $naamaanvraag ?></h2>
+                            <div class="uitleenaanvraagdatums">
+                                <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
+                                <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b><br>
+                                <b>Status: <?php echo getStatusLabel($aanvraag['status']) ?> </b>
+                            </div>
+                            <div class="uitleenaanvraagproducten">
+                                <br>
+                                <b>Aangevraagde product(en):</b>
+                                <?php $producten = new UitleenAanvraag();
+                                foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
+                                <div class="uitleenaanvraagproduct">
                                     <b><?php echo $product[1] ?></b>
                                 </div>
                                 <?php } ?>
@@ -200,7 +213,7 @@ if ($_POST != NULL) {
                             <div class="uitleenaanvraagbuttons">
                                 <form action="uitleen_admin_aanvragen_overzicht.php" method="post">
                                     <input type="hidden" name="aanvraag_id"
-                                        value="<?php echo $obj['aanvraag_id'] ?>">
+                                        value="<?php echo $aanvraag['aanvraag_id'] ?>">
                                     <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
                                         value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
                                     <input type="submit" name="action" class="uitleenaanvraagbutton uitleenafkeuren"
