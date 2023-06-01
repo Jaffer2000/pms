@@ -191,9 +191,7 @@ function getStatusLabel($status)
                         <article class="uitleenaanvraag">
                             <?php
                             $naam = new User();
-                            $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
-                            //var_dump($naamaanvraag);
-                            ?>
+                            $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);?>
                             <h2> <?php echo $naamaanvraag ?></h2>
                             <div class="uitleenaanvraagdatums">
                                 <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
@@ -227,25 +225,52 @@ function getStatusLabel($status)
                         </article>
                         <?php } ?>
                     </div>
-                    <?php echo '<div class="pagination">';
-                    if ($page > 1) {
-                        echo '<a href="?page=' . ($page - 1) . '" style="color: var(--main-color); margin-right: 20px;">&lt;</a>';
-                    }
-                    for ($i = 1; $i <= $totalPages; $i++) {
-                        if ($totalPages > 3 && $i === 4) {
-                            echo '<span style="color: var(--main-color); margin-right: 20px;">...</span>';
-                        }
-                        if ($i === 1 || $i === $totalPages || abs($i - $page) <= 1 || ($totalPages > 3 && abs($i - $page) === 2)) {
-                            $activeClass = ($i == $page) ? 'active' : '';
-                            echo '<a href="?page=' . $i . '" class="' . $activeClass . '" style="color: var(--main-color); margin-right: 20px;">' . $i . '</a>';
-                        }
-                    }
-                    if ($page < $totalPages) {
-                        echo '<a href="?page=' . ($page + 1) . '" style="color: var(--main-color); margin-left: 10px;">&gt;</a>';
-                    }
+                    <?php
+                        echo '<div class="pagination">';
 
-                    echo '</div>';
-                    ?>
+                        if ($page > 1) {
+                            echo '<a href="?page=' . ($page - 1) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
+                        } else {
+                            echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
+                        }
+                        
+                        // Display the first page
+                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1">1</a>';
+                        
+                        // Display the ellipsis if there are more than 3 pages
+                        if ($totalPages > 3) {
+                            if ($page > 3) {
+                                echo '<span style="margin-right:20px;">...</span>';
+                            }
+                        }
+                        
+                        // Determine the start and end page numbers to display
+                        $startPage = max(2, $page - 1);
+                        $endPage = min($totalPages - 1, $startPage + 2);
+                        
+                        // Display the pages within the range
+                        for ($i = $startPage; $i <= $endPage; $i++) {
+                            $activeClass = ($i == $page) ? 'active' : '';
+                            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '" class="' . $activeClass . '">' . $i . '</a>';
+                        }
+                        
+                        // Display the ellipsis if there are more pages after the displayed range
+                        if ($totalPages > $endPage) {
+                            echo '<span style="margin-right:20px;">...</span>';
+                        }
+                        
+                        // Display the last page
+                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == $totalPages ? ' text-decoration: underline;' : '') . '" href="?page=' . $totalPages . '">' . $totalPages . '</a>';
+                        
+                        if ($page < $totalPages) {
+                            echo '<a href="?page=' . ($page + 1) . '" style="color: var(--main-color); margin-left:10px;">></a>';
+                        } else {
+                            echo '<span style="color: var(--main-color); margin-left:10px; opacity: 0.5;">></span>';
+                        }
+                        
+                        echo '</div>';
+                        
+                        ?>
                 </div>
             </div>
         </div>
