@@ -2717,3 +2717,20 @@ table {
 .uitleenaanvragenknop {
   padding-left: 10px;
 }
+
+.uitleenaanvragenoverzichtaanvragen {
+  color: var(--main-color);
+}
+
+.pagination {
+  color: var(--main-color);
+  font-size: 18px;
+}
+
+.pagination a {
+  text-decoration: none;
+}
+
+.pagination a.active {
+  text-decoration: underline;
+}
