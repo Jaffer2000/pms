@@ -2687,6 +2687,11 @@ table {
   color: var(--logo-color);
 }
 
+.uitleenaanvraag {
+  margin-right: 60px;
+  margin-bottom: 10px;
+}
+
 .uitleenproducttextinput {
   color: black !important;
 }
@@ -2723,6 +2728,10 @@ table {
 }
 
 .pagination {
+  position: fixed;
+  bottom: 45px;
+  left: 50%;
+  transform: translateX(-50%);
   color: var(--main-color);
   font-size: 18px;
 }
