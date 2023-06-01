@@ -191,7 +191,9 @@ function getStatusLabel($status)
                         <article class="uitleenaanvraag">
                             <?php
                             $naam = new User();
-                            $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);?>
+                            $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
+                            //var_dump($naamaanvraag);
+                            ?>
                             <h2> <?php echo $naamaanvraag ?></h2>
                             <div class="uitleenaanvraagdatums">
                                 <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>

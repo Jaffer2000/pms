@@ -72,11 +72,10 @@ class User
      * @return mixed|void
      */
     public function getUserUsername($userid) {
-
         // get student gebruikersnaam
         try {
-            $sql = $this->connect()->prepare("SELECT naam FROM `users` WHERE id = ?");
-            $sql->bind_param("i", $userid);
+            $sql = $this->connect()->prepare("SELECT `naam` FROM `users` WHERE `username` = ?");
+            $sql->bind_param("s", $userid);
             $sql->execute();
             $username = $sql->get_result();
             $username = $username->fetch_assoc();
