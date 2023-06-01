@@ -33,11 +33,10 @@ if ($_POST != NULL) {
             echo 'alert("Datum mag niet eerder dan vandaag zijn")';
             echo '</script>';  
          
-
         } elseif ($_POST['product'] != NULL) {
 
             $uitleenaanvraag = new UitleenAanvraag();
-            $aanvraag = $uitleenaanvraag->createAanvraag($_SESSION['id'], $_POST['datumvan'], $_POST['datumtot'], $_POST['naamaanvraag']);
+            $aanvraag = $uitleenaanvraag->createAanvraag( $_POST['datumvan'], $_POST['datumtot'], $_POST['naamaanvraag']);
 
             // Get created aanvraag id
             $aanvraag_id = $aanvraag[1];
@@ -64,17 +63,12 @@ if ($_POST != NULL) {
     <title>Innovision Solutions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <link rel="stylesheet" href="style.css">
-
     <script src="https://kit.fontawesome.com/dd43f5ad90.js" crossorigin="anonymous"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
-
     <link rel="icon" type="image/x-icon" href="/img/icon.png">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 </head>
 
 <body>
@@ -239,6 +233,7 @@ if ($_POST != NULL) {
 
                 <div class="uitleenaanvragenformulier">
                     <form action="uitleen_aanvraag_formulier.php" method="post">
+                        <?php print_r($_POST); ?>
                         <div class="uitleenaanvragendatums">
                             <table class="uitleenaanvragentable">
                                 <tr>

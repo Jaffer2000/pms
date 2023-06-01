@@ -177,7 +177,15 @@ function getStatusLabel($status)
                 <div class="uitleenaanvragenoverzichtaanvragen scroll">
                     <div class="project-boxes jsGridView">
                         <?php $aanvragen = new UitleenAanvraag();
-                    foreach ($aanvragen->getAllAanvragen() as $aanvraag) {
+                        $totalAanvragen = count($aanvragen->getAllAanvragen());
+                        $perPage = 8;
+                        $totalPages = ceil($totalAanvragen / $perPage);
+    
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                        $start = ($page - 1) * $perPage;
+                        $end = $start + $perPage;
+                        $currentPageAanvragen = array_slice($aanvragen->getAllAanvragen(), $start, $perPage);
+                        foreach ($currentPageAanvragen as $aanvraag) {
                         $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
                         $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));?>
                         <article class="uitleenaanvraag">
@@ -191,6 +199,8 @@ function getStatusLabel($status)
                                 <b>Status: <?php echo getStatusLabel($aanvraag['status']) ?> </b>
                             </div>
                             <div class="uitleenaanvraagproducten">
+                                <br>
+                                <b>Aangevraagde product(en):</b>
                                 <?php $producten = new UitleenAanvraag();
                                 foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
                                 <div class="uitleenaanvraagproduct">
@@ -211,9 +221,22 @@ function getStatusLabel($status)
                                         onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
                                 </form>
                             </div>
+                            <?php ?>
                         </article>
                         <?php } ?>
                     </div>
+                    <?php echo '<div class="pagination">';
+                    if ($page > 1) {
+                        echo '<a href="?page=' . ($page - 1) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
+                    }
+                    for ($i = 1; $i <= $totalPages; $i++) {
+                        echo '<a href="?page=' . $i . '" style="color: var(--main-color); margin-right:10px;">' . $i . '</a>';
+                    }
+                    if ($page < $totalPages) {
+                        echo '<a href="?page=' . ($page + 1) . '" style="color: var(--main-color); margin-left:10px;">></a>';
+                    }
+                
+                    echo '</div>'; ?>
                 </div>
             </div>
         </div>
