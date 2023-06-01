@@ -173,26 +173,26 @@ if ($_POST != NULL) {
                         $start = ($page - 1) * $perPage;
                         $end = $start + $perPage;
                         $currentPageAanvragen = array_slice($aanvragen->getAllAanvragen(), $start, $perPage);
-                        foreach ($currentPageAanvragen as $aanvraag) {
-                        $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
-                        $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));?>
-                        <article class="uitleenaanvraag">
-                            <?php
-                            foreach($aanvraag->getAanvraagNaamList() as $aobj){
-                                    echo $aobj->getNaam();
-                            }
-                            ?>
-                            <div class="uitleenaanvraagdatums">
-                                <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
-                                <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b><br>
-                                <b>Status: <?php echo getStatusLabel($aanvraag['status']) ?> </b>
-                            </div>
-                            <div class="uitleenaanvraagproducten">
-                                <br>
-                                <b>Aangevraagde product(en):</b>
-                                <?php $producten = new UitleenAanvraag();
-                                foreach ($producten->getAanvraagProducten($obj['aanvraag_id']) as $product) { ?>
-                                <div class="uitleenaanvraagproduct">
+                        foreach ($aanvraagList as $obj) {
+                            $obj['datum_van'] = date("d-m-Y", strtotime($obj['datum_van']));
+                            $obj['datum_tot'] = date("d-m-Y", strtotime($obj['datum_tot']));?>
+                            <article class="uitleenaanvraag">
+                                <?php
+                                foreach($aanvraag->getAanvraagNaamList() as $aobj){
+                                        echo $aobj->getNaam();
+                                }
+                                ?>
+                                <div class="uitleenaanvraagdatums">
+                                    <b>Datum van: <?php echo $obj['datum_van'] ?></b><br>
+                                    <b>Datum tot: <?php echo $obj['datum_tot'] ?></b><br>
+                                    <b>Status: <?php echo $aanvraag->getStatusLabel($obj['status']);
+                                    ?>
+                                     </b>
+                                </div>
+                                <div class="uitleenaanvraagproducten">
+                                    <?php $producten = new UitleenAanvraag();
+                                    foreach ($producten->getAanvraagProducten($obj['aanvraag_id']) as $product) { ?>
+                                    <div class="uitleenaanvraagproduct">
                                     <b><?php echo $product[1] ?></b>
                                 </div>
                                 <?php } ?>
@@ -200,7 +200,7 @@ if ($_POST != NULL) {
                             <div class="uitleenaanvraagbuttons">
                                 <form action="uitleen_admin_aanvragen_overzicht.php" method="post">
                                     <input type="hidden" name="aanvraag_id"
-                                        value="<?php echo $aanvraag['aanvraag_id'] ?>">
+                                        value="<?php echo $obj['aanvraag_id'] ?>">
                                     <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
                                         value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
                                     <input type="submit" name="action" class="uitleenaanvraagbutton uitleenafkeuren"
