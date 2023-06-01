@@ -163,6 +163,14 @@ if ($resultCheck === 1) {
     </svg>
   </a>
 
+  
+  <a href="uitleen_aanvraag_formulier.php" class="app-sidebar-link">
+    <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-settings" viewBox="0 0 24 24">
+      <defs />
+      <circle cx="12" cy="12" r="3" />
+      <path d="" />
+    </svg>
+  </a>
   <a href="admin.php" class="app-sidebar-link">
     <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-settings" viewBox="0 0 24 24">
       <defs />
@@ -170,6 +178,7 @@ if ($resultCheck === 1) {
       <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
     </svg>
   </a>
+
 
   <a class="mode-switch" title="Switch Theme">
         <svg class="moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="24" height="24" viewBox="0 0 24 24">
@@ -292,9 +301,30 @@ if ($resultCheck === 1) {
   <a href="templates.php"><button class="breakout-button" style="margin-top:16px;" type="button">Naar templates</button></a>
 </article>
 
+<article class="box-admin-portaal">
+  <h1>Product aanvraag</h1>
+  <p>Wil je een product lenen voor een project? <br>Dan kan je deze hier aanvragen.</p>
+  <a href="uitleen_aanvraag_formulier.php"><button class="breakout-button" style="margin-top:16px;" type="button">Naar formulier</button></a>
+</article>
+
+<!-- lege articles voor de opmaak, kunnen laten aangepast worden voor nieuwe zaken te linken -->
+<article class="box-admin-portaal">
+  <h1>Binnenkort</h1>
+  <p>Hier komt binnenkort een opvulling</p>
+  <!-- <a href=""><button class="breakout-button" style="margin-top:16px;" type="button"></button></a> -->
+</article>
+
+<article class="box-admin-portaal">
+  <h1>Binnenkort</h1>
+  <p>Hier komt binnenkort een opvulling</p>
+  <!-- <a href=""><button class="breakout-button" style="margin-top:16px;" type="button"></button></a> -->
+</article>
+
 <div class="projects-section-header-home" style="width:100%;">
 <h2>Jouw projecten</h2><br><p>Je werkt op dit moment aan <?php echo $resultCheck; ?> <?php echo $projectenkelvoud; ?>.</p><br>
   </div>
+
+  
 
       <?php
 

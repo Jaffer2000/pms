@@ -218,22 +218,59 @@ class UitleenAanvraag {
 
         return true;
 	}
+    
+// public function getNaam(){
+//     // selecteer naam
+//     try {
+//         $naam = $sql = "SELECT naamaanvraag FROM `aanvragen` ORDER BY aanvraag_id DESC LIMIT 30";
+//         $naam = mysqli_query($this->connect(), $sql);
+//     }  catch (Exception $e){
 
-    public function getAllNaam()
-    {
-        // get all naam van aanvraag
-        try {
-            $sql = "SELECT 'naamaanvraag' FROM `aanvragen` ORDER BY aanvraag_id DESC LIMIT 30";
-            $naamaanvraag = mysqli_query($this->connect(), $sql);
-        }catch (Exception $e){
+//         // echo error message
+//         echo $e->getMessage();
+//         die;
+//     }
 
-            // echo error message
-            echo $e->getMessage();
-            die;
+//     return $naam;
+// }
+
+public function getAanvraagNaamList() {
+    $return_array = array();
+
+        $query = "SeLeCt * FrOm `aanvragen` limit 1;";
+        $result = $this->connect()->query($query);
+        // For all database results:
+        foreach ($result as $idx => $array){
+            // Nieuw object
+            $lijst = new UitleenAanvraag();
+            // Set info
+            $lijst->setNaam($array['naamaanvraag']);
+
+            // Add new object to return array.
+            $return_array[] = $lijst;
         }
-
-    return $naamaanvraag;
+        return $return_array;
 }
 
-
+public function setNaam($naam) {
+    $this->naam = $naam;
 }
+
+public function getNaam() {
+    return $this->naam;
+}
+    
+public function getStatusLabel($status)
+{
+    if ($status == 1) {
+        return 'Goedgekeurd';
+    } elseif ($status == 2) {
+        return 'Ingeleverd';
+    } elseif ($status == 3) {
+        return 'Afgekeurd';
+    } else {
+        return '';
+    }
+}
+}
+
