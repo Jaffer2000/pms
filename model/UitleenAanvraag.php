@@ -138,7 +138,7 @@ class UitleenAanvraag {
     {
         // get aanvraag producten
         try {
-            $sql = $this->connect()->prepare(
+            $sql = $this->connect()->prepare( 
                 "SELECT aanvraag_producten.product_id, producten.product_naam 
                         FROM aanvraag_producten 
                         INNER JOIN producten 
@@ -223,20 +223,7 @@ class UitleenAanvraag {
         return true;
 	}
     
-// public function getNaam(){
-//     // selecteer naam
-//     try {
-//         $naam = $sql = "SELECT naamaanvraag FROM `aanvragen` ORDER BY aanvraag_id DESC LIMIT 30";
-//         $naam = mysqli_query($this->connect(), $sql);
-//     }  catch (Exception $e){
 
-//         // echo error message
-//         echo $e->getMessage();
-//         die;
-//     }
-
-//     return $naam;
-// }
 
 public function getAanvraagNaamList() {
     $return_array = array();

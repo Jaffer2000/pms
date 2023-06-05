@@ -30,7 +30,9 @@ function getStatusLabel($status)
         return 'Ingeleverd';
     } elseif ($status == 3) {
         return 'Afgekeurd';
-    } else {
+    } elseif ($status == 0){ 
+        return 'nog beoordelen';
+    }else {
         return '';
     }
 }
@@ -145,7 +147,15 @@ function getStatusLabel($status)
                     </svg>
                 </a>
 
-                <a href="admin.php" class="app-sidebar-link active">
+                <a href="uitleen_aanvraag_formulier.php" class="app-sidebar-link">
+                    <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-settings" viewBox="0 0 24 24">
+                    <defs />
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="" />
+                    </svg>
+                </a>
+
+                <a href="admin.php" class="app-sidebar-link">
                     <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                         stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         class="feather feather-settings" viewBox="0 0 24 24">

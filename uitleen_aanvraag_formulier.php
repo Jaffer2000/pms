@@ -177,7 +177,7 @@ if ($_POST != NULL) {
         </div>
 
         <div class="app-content">
-            <<div class="app-sidebar">
+            <div class="app-sidebar">
 
 <a href="index.php" class="app-sidebar-link active">
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
@@ -238,7 +238,6 @@ if ($_POST != NULL) {
 
                 <div class="uitleenaanvragenformulier">
                     <form action="uitleen_aanvraag_formulier.php" method="post">
-                        <?php print_r($_POST); ?>
                         <div class="uitleenaanvragendatums">
                             <table class="uitleenaanvragentable">
                                 <tr>
