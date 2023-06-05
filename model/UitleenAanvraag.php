@@ -56,12 +56,11 @@ class UitleenAanvraag {
      * @param $naamaanvraag
      * @return array|void
      */
-	public function createAanvraag($userid, $datumvan, $datumtot, $naamaanvraag)
+	public function createAanvraag($datumvan, $datumtot, $naamaanvraag)
     {
         // maak aanvraag aan
-
         try {
-            $sql = $this->connect()->prepare("INSERT INTO aanvragen (user_id, datum_van, datum_tot, naamaanvraag) VALUES ($userid, $datumvan, $datumtot, '$naamaanvraag');");
+            $sql = $this->connect()->prepare("CALL GETAANVRAGEN('$datumvan','$datumtot','$naamaanvraag');");
             $sql->execute();
             $sql->close();
 
@@ -109,20 +108,25 @@ class UitleenAanvraag {
      * @return bool|mysqli_result|void
      */
 	public function getAllAanvragen()
-    {
-        // get all aanvragen
-        try {
-            $sql = "SELECT * FROM `aanvragen` ORDER BY aanvraag_id DESC LIMIT 30";
-            $aanvragen = mysqli_query($this->connect(), $sql);
-        }  catch (Exception $e){
+{
+    // get all aanvragen
+    try {
+        $sql = "SELECT * FROM `aanvragen` ORDER BY aanvraag_id";
+        $result = mysqli_query($this->connect(), $sql);
+        $aanvragen = [];
 
-            // echo error message
-            echo $e->getMessage();
-            die;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $aanvragen[] = $row;
         }
+    } catch (Exception $e) {
+        // echo error message
+        echo $e->getMessage();
+        die;
+    }
 
-        return $aanvragen;
-	}
+    return $aanvragen;
+}
+
 
     /**
      * getAanvraagProducten
@@ -134,7 +138,7 @@ class UitleenAanvraag {
     {
         // get aanvraag producten
         try {
-            $sql = $this->connect()->prepare(
+            $sql = $this->connect()->prepare( 
                 "SELECT aanvraag_producten.product_id, producten.product_naam 
                         FROM aanvraag_producten 
                         INNER JOIN producten 
@@ -219,20 +223,7 @@ class UitleenAanvraag {
         return true;
 	}
     
-// public function getNaam(){
-//     // selecteer naam
-//     try {
-//         $naam = $sql = "SELECT naamaanvraag FROM `aanvragen` ORDER BY aanvraag_id DESC LIMIT 30";
-//         $naam = mysqli_query($this->connect(), $sql);
-//     }  catch (Exception $e){
 
-//         // echo error message
-//         echo $e->getMessage();
-//         die;
-//     }
-
-//     return $naam;
-// }
 
 public function getAanvraagNaamList() {
     $return_array = array();
@@ -272,5 +263,5 @@ public function getStatusLabel($status)
         return '';
     }
 }
-}
 
+}
