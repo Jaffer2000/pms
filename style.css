@@ -2743,3 +2743,23 @@ table {
 .pagination a.active {
   text-decoration: underline;
 }
+
+.uitleenaanvragenoverzichtaanvragen.scroll {
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.uitleenaanvraag {
+  flex: 0 0 calc(25% - 10px);
+  margin: 5px;
+}
+
+.pagination {
+  padding-top: 0px;
+}
