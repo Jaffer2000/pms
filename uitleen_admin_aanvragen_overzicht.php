@@ -31,7 +31,7 @@ function getStatusLabel($status)
     } elseif ($status == 3) {
         return 'Afgekeurd';
     } elseif ($status == 0){ 
-        return 'nog beoordelen';
+        return 'Nog beoordelen';
     }else {
         return '';
     }
@@ -148,10 +148,12 @@ function getStatusLabel($status)
                 </a>
 
                 <a href="uitleen_aanvraag_formulier.php" class="app-sidebar-link">
-                    <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-settings" viewBox="0 0 24 24">
-                    <defs />
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="" />
+                    <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        class="feather feather-settings" viewBox="0 0 24 24">
+                        <defs />
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="" />
                     </svg>
                 </a>
 
@@ -185,57 +187,75 @@ function getStatusLabel($status)
                     </div>
                 </div>
                 <div class="uitleenaanvragenoverzichtaanvragen scroll">
-                    <div class="project-boxes jsGridView">
-                        <?php $aanvragen = new UitleenAanvraag();
-                        $totalAanvragen = count($aanvragen->getAllAanvragen());
-                        $perPage = 8;
-                        $totalPages = ceil($totalAanvragen / $perPage);
-    
-                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                        $start = ($page - 1) * $perPage;
-                        $end = $start + $perPage;
-                        $currentPageAanvragen = array_slice($aanvragen->getAllAanvragen(), $start, $perPage);
-                        foreach ($currentPageAanvragen as $aanvraag) {
+                    <?php
+                    $aanvragen = new UitleenAanvraag();
+                    $totalAanvragen = count($aanvragen->getAllAanvragen());
+                    $perPage = 8;
+                    $totalPages = ceil($totalAanvragen / $perPage);
+
+                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                    $start = ($page - 1) * $perPage;
+                    $end = $start + $perPage;
+                    $currentPageAanvragen = array_slice($aanvragen->getAllAanvragen(), $start, $perPage);
+                    $rowCount = 0; // Counter for tracking the number of requests in a row
+
+                    foreach ($currentPageAanvragen as $aanvraag) {
                         $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
-                        $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));?>
-                        <article class="uitleenaanvraag">
-                            <?php
+                        $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
+
+                        if ($rowCount % 4 === 0) {
+                            // Start a new row after every 4 requests
+                            echo '<div class="row">';
+                        }
+                        ?>
+
+                    <div class="uitleenaanvraag">
+                        <?php
                             $naam = new User();
                             $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);?>
-                            <h2> <?php echo $naamaanvraag ?></h2>
-                            <div class="uitleenaanvraagdatums">
-                                <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
-                                <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b><br>
-                                <b>Status: <?php echo getStatusLabel($aanvraag['status']) ?> </b>
-                            </div>
-                            <div class="uitleenaanvraagproducten">
-                                <br>
-                                <b>Aangevraagde product(en):</b>
-                                <?php $producten = new UitleenAanvraag();
+                        <h2> <?php echo $naamaanvraag ?></h2>
+                        <div class="uitleenaanvraagdatums">
+                            <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
+                            <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b><br>
+                            <b>Status: <?php echo getStatusLabel($aanvraag['status']) ?> </b>
+                        </div>
+                        <div class="uitleenaanvraagproducten">
+                            <br>
+                            <b>Aangevraagde product(en):</b>
+                            <?php $producten = new UitleenAanvraag();
                                 foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
-                                <div class="uitleenaanvraagproduct">
-                                    <b><?php echo $product[1] ?></b>
-                                </div>
-                                <?php } ?>
+                            <div class="uitleenaanvraagproduct">
+                                <b><?php echo $product[1] ?></b>
                             </div>
-                            <div class="uitleenaanvraagbuttons">
-                                <form action="uitleen_admin_aanvragen_overzicht.php" method="post">
-                                    <input type="hidden" name="aanvraag_id"
-                                        value="<?php echo $aanvraag['aanvraag_id'] ?>">
-                                    <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
-                                        value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
-                                    <input type="submit" name="action" class="uitleenaanvraagbutton uitleenafkeuren"
-                                        value="Afkeuren" onclick="return confirm('Wil je deze aanvraag afkeuren?')">
-                                    <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd"
-                                        value="Ingeleverd"
-                                        onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
-                                </form>
-                            </div>
-                            <?php ?>
-                        </article>
-                        <?php } ?>
+                            <?php } ?>
+                        </div>
+                        <div class="uitleenaanvraagbuttons">
+                            <form action="uitleen_admin_aanvragen_overzicht.php" method="post">
+                                <input type="hidden" name="aanvraag_id" value="<?php echo $aanvraag['aanvraag_id'] ?>">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
+                                    value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleenafkeuren"
+                                    value="Afkeuren" onclick="return confirm('Wil je deze aanvraag afkeuren?')">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd"
+                                    value="Ingeleverd"
+                                    onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
+                            </form>
+                        </div>
+                        <?php ?>
                     </div>
+
                     <?php
+                    $rowCount++;
+
+                    if ($rowCount % 4 === 0 || $rowCount === count($currentPageAanvragen)) {
+                        // End the row after every 4 requests or at the end of requests
+                        echo '</div>';
+                    }
+                 }
+                    ?>
+
+                    <?php
+                    if ($totalPages > 1) {
                         echo '<div class="pagination">';
 
                         if ($page > 1) {
@@ -243,44 +263,47 @@ function getStatusLabel($status)
                         } else {
                             echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
                         }
-                        
+
                         // Display the first page
                         echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1">1</a>';
-                        
+
                         // Display the ellipsis if there are more than 3 pages
                         if ($totalPages > 3) {
                             if ($page > 3) {
                                 echo '<span style="margin-right:20px;">...</span>';
                             }
                         }
-                        
+
                         // Determine the start and end page numbers to display
                         $startPage = max(2, $page - 1);
                         $endPage = min($totalPages - 1, $startPage + 2);
-                        
+
                         // Display the pages within the range
                         for ($i = $startPage; $i <= $endPage; $i++) {
                             $activeClass = ($i == $page) ? 'active' : '';
                             echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '" class="' . $activeClass . '">' . $i . '</a>';
                         }
-                        
+
                         // Display the ellipsis if there are more pages after the displayed range
                         if ($totalPages > $endPage) {
                             echo '<span style="margin-right:20px;">...</span>';
                         }
-                        
+
                         // Display the last page
                         echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == $totalPages ? ' text-decoration: underline;' : '') . '" href="?page=' . $totalPages . '">' . $totalPages . '</a>';
-                        
+
                         if ($page < $totalPages) {
                             echo '<a href="?page=' . ($page + 1) . '" style="color: var(--main-color); margin-left:10px;">></a>';
                         } else {
                             echo '<span style="color: var(--main-color); margin-left:10px; opacity: 0.5;">></span>';
                         }
-                        
+
                         echo '</div>';
-                        
-                        ?>
+                    } elseif ($totalPages == 0) {
+                        echo 'Er zijn geen aanvragen.';
+                    }
+                    ?>
+
                 </div>
             </div>
         </div>
