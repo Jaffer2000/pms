@@ -59,6 +59,14 @@ $sql = "SELECT * FROM tickets WHERE `beheerder` LIKE '%".$persoonlijkepagina."%'
 $resultTickets = mysqli_query($conn, $sql);
 $resultCheckTickets = mysqli_num_rows($resultTickets);
 
+// aanvragen id
+$sql = "SELECT 'user_id' FROM aanvragen ";
+
+$resultAanvragen = mysqli_query($conn, $sql);
+$resultCheckAanvragen = mysqli_num_rows($resultAanvragen);
+
+// een check maken waarbij die de user_id en id van tavel users vergelijkt en zo de aanvragen laat zien
+
 if ($resultCheckTickets === 0) {
   $resultCheckTickets = "geen";
 }
@@ -80,6 +88,13 @@ if ($resultCheck === 1) {
 } else {
   $projectenkelvoud = "projecten";
 }
+
+if ($resultCheckAanvragen === 1) {
+  $aanvraagenkelvoud = "aanvraag";
+} else {
+  $aanvraagenkelvoud = "aanvragen";
+}
+
 ?>
 
 <svg class="logo" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1249.04 346.81">
@@ -548,6 +563,43 @@ if ($resultCheck === 1) {
       }
         
       ?>
+
+    <div class="projects-section-header-home" style="width:100%;">
+    <h2>Jouw Aanvragen</h2><br><p> Je hebt <?php echo $resultCheckAanvragen; ?> <?php echo $aanvraagenkelvoud; ?>.</p><br>
+    </div>
+    <?php
+
+function getStatusLabel($resultAanvraagStatus)
+{
+    if ($resultAanvraagStatus == 1) {
+        return 'Goedgekeurd';
+    } elseif ($resultAanvraagStatus == 2) {
+        return 'Ingeleverd';
+    } elseif ($resultAanvraagStatus == 3) {
+        return 'Afgekeurd';
+    } elseif ($resultAanvraagStatus == 0){ 
+        return 'nog beoordelen';
+    }else {
+        return '';
+    }
+}
+       echo'<div class="project-box-wrapper">';
+       echo'<div class="project-box" style="background-color: ', $BGcolor ,';">';
+       echo'<div class="project-box-content-header">';
+
+       echo '<div class="naamaanvraag"> <b>Van:</b>'.  '</div>';
+       echo '<div class="naamaanvraag"> <b>Tot:</b> <tot echo hier></div>';
+       echo '<div class="naamaanvraag"> <b>Status:</b>'. '</div>';
+       echo '<div class="naamaanvraag"> <b>Product:</b> <product echo hier></div>';
+
+
+
+
+       echo'</div></div></div>';
+
+      
+        ?>
+      
 
 </div></div></div>
 <!-- partial -->

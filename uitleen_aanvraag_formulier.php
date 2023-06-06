@@ -250,8 +250,20 @@ if ($_POST != NULL) {
                                 </tr>
                                 <tr>
                                     <td><label for="naamaanvraag"><b>Je naam:</b></label></td>
-                                    <td><input type="text" class="aanvraagformnaam" id="naamaanvraag"
-                                            name="naamaanvraag" required></td>
+                                    <td><select name="naamaanvraag" id="naamaanvraag">
+                                        <option value="test">
+                                            <?php
+
+                                                $sql = "SELECT 'username' FROM users";
+                                                $resultnamen = mysqli_query($conn, $sql);
+                                                $resultChecknamen = mysqli_num_rows($resultnamen);
+                                                
+                                                $var_name = $resultnamen;
+                                                echo strval($resultnamen);
+
+                                            ?>
+                                        </option>
+                                    </select></td>
                                 </tr>
                             </table>
                         </div>
