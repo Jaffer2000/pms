@@ -58,24 +58,30 @@ class UitleenAanvraag {
      */
 	public function createAanvraag($datumvan, $datumtot, $naamaanvraag)
     {
-        // maak aanvraag aan
         try {
-            $sql = $this->connect()->prepare("CALL GETAANVRAGEN('$datumvan','$datumtot','$naamaanvraag');");
+            $sql = $this->connect()->prepare("CALL GETAANVRAGEN(?, ?, ?)");
+            $sql->bind_param("sss", $datumvan, $datumtot, $naamaanvraag);
             $sql->execute();
+
+            // Retrieve the generated ID
+            $result = $this->connect()->query("SELECT LAST_INSERT_ID() AS generated_id");
+            $row = $result->fetch_assoc();
+
+            if (!$row || !isset($row['generated_id'])) {
+                throw new Exception("Failed to retrieve the generated ID");
+            }
+
+            $aanvraag_id = $row['generated_id'];
+
             $sql->close();
 
-            $aanvraag_id = new Database();
-            $aanvraag_id = $aanvraag_id->getLastInsertedId();
-
-
         } catch (Exception $e) {
-
-            // echo error message
             echo $e->getMessage();
             die;
         }
-        return [true, $aanvraag_id];
-	}
+
+    return [true, $aanvraag_id];
+}
 
     /**
      * saveAanvraagProduct
@@ -108,25 +114,24 @@ class UitleenAanvraag {
      * @return bool|mysqli_result|void
      */
 	public function getAllAanvragen()
-{
-    // get all aanvragen
-    try {
-        $sql = "SELECT * FROM `aanvragen` ORDER BY aanvraag_id";
-        $result = mysqli_query($this->connect(), $sql);
-        $aanvragen = [];
+    {
+        // get all aanvragen
+        try {
+            $sql = "SELECT * FROM `aanvragen` ORDER BY aanvraag_id";
+            $result = mysqli_query($this->connect(), $sql);
+            $aanvragen = [];
 
-        while ($row = mysqli_fetch_assoc($result)) {
-            $aanvragen[] = $row;
+            while ($row = mysqli_fetch_assoc($result)) {
+                $aanvragen[] = $row;
+            }
+        } catch (Exception $e) {
+            // echo error message
+            echo $e->getMessage();
+            die;
         }
-    } catch (Exception $e) {
-        // echo error message
-        echo $e->getMessage();
-        die;
-    }
 
     return $aanvragen;
 }
-
 
     /**
      * getAanvraagProducten
@@ -226,7 +231,7 @@ class UitleenAanvraag {
 
 
 public function getAanvraagNaamList() {
-    $return_array = array();
+        $return_array = array();
 
         $query = "SeLeCt * FrOm `aanvragen` limit 1;";
         $result = $this->connect()->query($query);
