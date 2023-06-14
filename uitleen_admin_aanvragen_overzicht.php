@@ -82,7 +82,7 @@ function getStatusLabel($status)
 
                 <div class="item-status" style="margin-top:-5px;">
                     <span class="status-type2"> <?php
-      echo " <b>" . $datetime . "</b>";?><br>
+                        echo " <b>" . $datetime . "</b>";?><br>
                         Je bekijkt het <b>Uitleensysteem aanvragen overzicht</b></span>
                 </div>
             </div>
@@ -333,9 +333,7 @@ function getStatusLabel($status)
             }
         }
         </script>
-
     </div>
 </body>
 
 </html>
-<!-- verandering -->
