@@ -179,7 +179,7 @@ if ($_POST != NULL) {
         <div class="app-content">
             <div class="app-sidebar">
 
-                <a href="index.php" class="app-sidebar-link active">
+                <a href="index.php" class="app-sidebar-link">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="feather feather-home">
@@ -216,7 +216,7 @@ if ($_POST != NULL) {
                 </a>
 
 
-                <a href="uitleen_aanvraag_formulier.php" class="app-sidebar-link">
+                <a href="uitleen_aanvraag_formulier.php" class="app-sidebar-link active">
                     <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                         stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         class="feather feather-settings" viewBox="0 0 24 24">
