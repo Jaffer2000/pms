@@ -256,7 +256,7 @@ if ($_POST != NULL) {
                                         $resultnamen = mysqli_query($conn, $sql);
                                         $resultChecknamen = mysqli_num_rows($resultnamen);
                                                 while($row = mysqli_fetch_assoc($resultnamen)){
-                                                    echo '<option value="'.$row["username"].'">';
+                                                    echo '<option id=\"naamaanvraagophaal\" value="'.$row["username"].'">';
                                                     echo $row["username"];
                                                     echo '</option>';
                                                 }
