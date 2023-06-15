@@ -162,32 +162,37 @@ class UitleenProduct {
      */
 	public function getLastLender($product_id)
     {
-        /**
-         * IN DEVELOPMENT
-         *
-         try {
-            $sql = $this->connect()->prepare(
-                "SELECT *
-                        FROM aanvragen
-                        INNER JOIN producten
-                        ON aanvraag_producten.product_id = producten.product_id
-                        INNER JOIN aanvraag_producten
-                        ON
-                        WHERE aanvraag_producten.aanvraag_id = ?");
-            $sql->bind_param("i", $aanvraag_id);
+        try {
+            $sql = $this->connect()->prepare("
+                SELECT users.username
+                FROM aanvragen
+                INNER JOIN users ON aanvragen.user_id = users.id
+                WHERE aanvragen.aanvraag_id = (
+                    SELECT aanvraag_id
+                    FROM aanvraag_producten
+                    WHERE product_id = ?
+                    ORDER BY aanvraag_id DESC
+                    LIMIT 1
+                )
+            ");
+            $sql->bind_param("i", $product_id);
             $sql->execute();
-            $producten = $sql->get_result();
-            $producten = $producten->fetch_all();
-        }  catch (Exception $e){
-
-            // echo error message
+            $result = $sql->get_result();
+            
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $lastLender = $row['username'];
+            } else {
+                $lastLender = 'Geen lener gevonden';
+            }
+        } catch (Exception $e) {
+            // Handle the error
             echo $e->getMessage();
             die;
         }
 
-        return $producten;
-        */
+        return $lastLender;
+    }
 
-	}
 }
 ?>
