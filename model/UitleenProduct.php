@@ -183,7 +183,7 @@ class UitleenProduct {
                 $row = $result->fetch_assoc();
                 $lastLender = $row['naam'];
             } else {
-                $lastLender = 'No lender found';
+                $lastLender = 'Geen lener gevonden';
             }
         } catch (Exception $e) {
             // Handle the error
