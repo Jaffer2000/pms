@@ -164,7 +164,7 @@ class UitleenProduct {
     {
         try {
             $sql = $this->connect()->prepare("
-                SELECT users.username
+                SELECT users.naam
                 FROM aanvragen
                 INNER JOIN users ON aanvragen.user_id = users.id
                 WHERE aanvragen.aanvraag_id = (
@@ -178,12 +178,12 @@ class UitleenProduct {
             $sql->bind_param("i", $product_id);
             $sql->execute();
             $result = $sql->get_result();
-            
+
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                $lastLender = $row['username'];
+                $lastLender = $row['naam'];
             } else {
-                $lastLender = 'Geen lener gevonden';
+                $lastLender = 'No lender found';
             }
         } catch (Exception $e) {
             // Handle the error
