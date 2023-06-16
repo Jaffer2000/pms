@@ -604,7 +604,7 @@ function getStudentLijst() {
               $lijst->setStatus($array['status']);
               
               // Add new object to return array.
-              $return_array[] = $lijs
+              $return_array[] = $lijst;
           }
           return $return_array;
         
