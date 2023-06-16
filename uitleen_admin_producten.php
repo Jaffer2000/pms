@@ -229,8 +229,10 @@ if ($_POST != NULL) {
                             <input type="submit" class="uitleenproductbeheerbutton" name="action" value="Bewerken">
                             <input type="submit" class="uitleenproductbeheerbutton" name="action" value="Verwijderen"
                                 onclick="return confirm('Weet je zeker dat je dit product wil verwijderen?');">
+                            <?php if (!empty($lastLender)) { ?>
                             <p style="display:inline" class="laatstuitgeleendaanopmaak">Laatst uitgeleend aan:
                                 <?php echo $lastLender; ?></p>
+                            <?php } ?>
                         </form>
                     </div>
                     <?php } ?>

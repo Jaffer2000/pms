@@ -164,21 +164,23 @@ class UitleenProduct {
     {
         try {
             $sql = $this->connect()->prepare("
-                SELECT users.naam
-                FROM aanvragen
-                INNER JOIN users ON aanvragen.user_id = users.id
+            SELECT users.naam
+            FROM aanvragen
+            INNER JOIN users ON aanvragen.user_id = users.id
                 WHERE aanvragen.aanvraag_id = (
-                    SELECT aanvraag_id
-                    FROM aanvraag_producten
-                    WHERE product_id = ?
-                    ORDER BY aanvraag_id DESC
-                    LIMIT 1
+                SELECT aanvraag_id
+                FROM aanvraag_producten
+                WHERE product_id = ?
+                AND status = 1
+                ORDER BY aanvraag_id DESC
+                LIMIT 1
                 )
             ");
+
             $sql->bind_param("i", $product_id);
             $sql->execute();
             $result = $sql->get_result();
-
+            
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
                 $lastLender = $row['naam'];
