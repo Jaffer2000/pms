@@ -161,40 +161,37 @@ class UitleenProduct {
      * @return void
      */
 	public function getLastLender($product_id)
-    {
-        try {
-            $sql = $this->connect()->prepare("
+{
+    try {
+        $sql = $this->connect()->prepare("
             SELECT users.naam
             FROM aanvragen
+            INNER JOIN aanvraag_producten ON aanvragen.aanvraag_id = aanvraag_producten.aanvraag_id
             INNER JOIN users ON aanvragen.user_id = users.id
-                WHERE aanvragen.aanvraag_id = (
-                SELECT aanvraag_id
-                FROM aanvraag_producten
-                WHERE product_id = ?
-                AND status = 1
-                ORDER BY aanvraag_id DESC
-                LIMIT 1
-                )
-            ");
+            WHERE aanvraag_producten.product_id = ?
+            AND (aanvragen.status = 1 OR aanvragen.status = 2) 
+            ORDER BY aanvragen.aanvraag_id DESC
+            LIMIT 1
+        ");
 
-            $sql->bind_param("i", $product_id);
-            $sql->execute();
-            $result = $sql->get_result();
-            
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $lastLender = $row['naam'];
-            } else {
-                $lastLender = 'Geen lener gevonden';
-            }
-        } catch (Exception $e) {
-            // Handle the error
-            echo $e->getMessage();
-            die;
+        $sql->bind_param("i", $product_id);
+        $sql->execute();
+        $result = $sql->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $lastLender = $row['naam'];
+        } else {
+            $lastLender = 'Geen lener gevonden';
         }
-
-        return $lastLender;
+    } catch (Exception $e) {
+        // Handle the error
+        echo $e->getMessage();
+        die;
     }
+
+    return $lastLender;
+}
 
 }
 ?>
