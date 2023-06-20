@@ -587,39 +587,43 @@ function getStatusLabel($resultAanvraagStatus)
         return '';
     }
 }
+// Prepare the query
+$query = "SELECT aanvraag_id, datum_van, datum_tot, status FROM aanvragen LIMIT 2";
 
-function getStudentLijst() {
-  $return_array = array();
+// Execute the query
+$result = $conn->query($query);
 
-          $query = "SELECT * FROM aanvragen";
-          $result = $this->DbConnect()->query($query);
-          // For all database results:
-          foreach ($result as $idx => $array){
-              // Nieuw object
-              $lijst = new classStudent();
-              // Set info
-              $lijst->setAanvraagId($array['aanvraag_id']);
-              $lijst->setDatumVan($array['datumvan']);
-              $lijst->setDatumTot($array['datumtot']);
-              $lijst->setStatus($array['status']);
-              
-              // Add new object to return array.
-              $return_array[] = $lijst;
-          }
-          return $return_array;
-        
-        }
-        var_dump($lijst);
+// Check if the query was successful
+if ($result) {
+    // Fetch the data from the result set
+    while ($row = $result->fetch_assoc()) {
+        $aanvraagId = $row['aanvraag_id'];
+        $datumVan = $row['datum_van'];
+        $datumTot = $row['datum_tot'];
+        $status = $row['status'];
+
         echo'<div class="project-box-wrapper">';
-       echo'<div class="project-box" style="background-color: ', $BGcolor ,';">';
-       echo'<div class="project-box-content-header">';
+        echo'<div class="project-box" style="background-color: ', $BGcolor ,';">';
+        echo'<div class="project-box-content-header">';
+ 
+        echo '<div class="naamaanvraag"> <b>Van:',  $datumVan , '</b> </div>';
+        echo '<div class="naamaanvraag"> <b>Tot:', $datumTot , '</b> <tot echo hier></div>';
+        echo '<div class="naamaanvraag"> <b>Status:</b>', getStatusLabel($status),'</div>';
+        echo '<div class="naamaanvraag"> <b>Product:</b> <product echo hier></div>';
+        echo'</div></div></div>';
+    }
 
-       echo '<div class="naamaanvraag"> <b>Van: </b> </div>';
-       echo '<div class="naamaanvraag"> <b>Tot:</b> <tot echo hier></div>';
-       echo '<div class="naamaanvraag"> <b>Status:</b>'. '</div>';
-       echo '<div class="naamaanvraag"> <b>Product:</b> <product echo hier></div>';
-       echo'</div></div></div>';
-        ?>
+    // Free the result set
+    $result->free();
+} else {
+    // Query execution failed
+    echo "Error: " . $conn->error;
+}
+
+// Close the connection
+$conn->close();
+
+    ?>
 
 </div></div></div>
 <!-- partial -->
