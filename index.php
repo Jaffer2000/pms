@@ -7,6 +7,21 @@
     exit;
   }
 
+  function getStatusLabel($resultAanvraagStatus)
+{
+    if ($resultAanvraagStatus == 1) {
+        return 'Goedgekeurd';
+    } elseif ($resultAanvraagStatus == 2) {
+        return 'Ingeleverd';
+    } elseif ($resultAanvraagStatus == 3) {
+        return 'Afgekeurd';
+    } elseif ($resultAanvraagStatus == 0){ 
+        return 'nog beoordelen';
+    }else {
+        return '';
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -59,12 +74,6 @@ $sql = "SELECT * FROM tickets WHERE `beheerder` LIKE '%".$persoonlijkepagina."%'
 $resultTickets = mysqli_query($conn, $sql);
 $resultCheckTickets = mysqli_num_rows($resultTickets);
 
-// aanvragen id
-$sql = "SELECT 'user_id' FROM aanvragen ";
-
-$resultAanvragen = mysqli_query($conn, $sql);
-$resultCheckAanvragen = mysqli_num_rows($resultAanvragen);
-
 // een check maken waarbij die de user_id en id van tavel users vergelijkt en zo de aanvragen laat zien
 
 if ($resultCheckTickets === 0) {
@@ -87,12 +96,6 @@ if ($resultCheck === 1) {
   $projectenkelvoud = "project";
 } else {
   $projectenkelvoud = "projecten";
-}
-
-if ($resultCheckAanvragen === 1) {
-  $aanvraagenkelvoud = "aanvraag";
-} else {
-  $aanvraagenkelvoud = "aanvragen";
 }
 
 ?>
@@ -142,6 +145,8 @@ if ($resultCheckAanvragen === 1) {
       echo'<i class="fa-solid fa-user"><a href=""> Account aanpassen</a></i><br><br>';
       echo'<i class="fa-solid fa-right-from-bracket"><a href="logout.php"> Uitloggen</a></i>';
       echo'</div></div>';
+
+      $userId = $row["id"];
     }
   ?>
 </div>
@@ -567,28 +572,29 @@ if ($resultCheckAanvragen === 1) {
       ?>
 
     <div class="projects-section-header-home" style="width:100%;">
+    <?php
+
+      // aanvragen id
+      $sql = "SELECT 'user_id' FROM aanvragen WHERE user_id = $userId";
+
+      $resultAanvragen = mysqli_query($conn, $sql);
+      $resultCheckAanvragen = mysqli_num_rows($resultAanvragen);
+      if ($resultCheckAanvragen === 1) {
+        $aanvraagenkelvoud = "aanvraag";
+      } else {
+        $aanvraagenkelvoud = "aanvragen";
+      }
+
+    ?>
     <h2>Jouw Aanvragen</h2><br><p> Je hebt <?php echo $resultCheckAanvragen; ?> <?php echo $aanvraagenkelvoud; ?>.</p><br>
     </div>
     <?php
 
     //het in een list zetten zoals het van de oop lessen en dan kan het werken
 
-function getStatusLabel($resultAanvraagStatus)
-{
-    if ($resultAanvraagStatus == 1) {
-        return 'Goedgekeurd';
-    } elseif ($resultAanvraagStatus == 2) {
-        return 'Ingeleverd';
-    } elseif ($resultAanvraagStatus == 3) {
-        return 'Afgekeurd';
-    } elseif ($resultAanvraagStatus == 0){ 
-        return 'nog beoordelen';
-    }else {
-        return '';
-    }
-}
 // Prepare the query
-$query = "SELECT aanvraag_id, datum_van, datum_tot, status FROM aanvragen LIMIT 2";
+$query = "SELECT aanvraag_id, datum_van, datum_tot, status FROM aanvragen WHERE user_id = $userId LIMIT 2";
+
 
 // Execute the query
 $result = $conn->query($query);
@@ -606,10 +612,10 @@ if ($result) {
         echo'<div class="project-box" style="background-color: ', $BGcolor ,';">';
         echo'<div class="project-box-content-header">';
  
-        echo '<div class="naamaanvraag"> <b>Van:',  $datumVan , '</b> </div>';
-        echo '<div class="naamaanvraag"> <b>Tot:', $datumTot , '</b> <tot echo hier></div>';
-        echo '<div class="naamaanvraag"> <b>Status:</b>', getStatusLabel($status),'</div>';
-        echo '<div class="naamaanvraag"> <b>Product:</b> <product echo hier></div>';
+        echo '<div class="naamaanvraag"> <b>Van: &nbsp;',  $datumVan , '</b> </div>';
+        echo '<div class="naamaanvraag"> <b>Tot: &nbsp;', $datumTot , '</b> <tot echo hier></div>';
+        echo '<div class="naamaanvraag"> <b>Status:</b> &nbsp;', getStatusLabel($status),'</div>';
+        echo '<div class="naamaanvraag"> <b>Product:</b> &nbsp; <product echo hier></div>';
         echo'</div></div></div>';
     }
 
