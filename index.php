@@ -183,7 +183,7 @@ if ($resultCheckAanvragen === 1) {
     <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-settings" viewBox="0 0 24 24">
       <defs />
       <circle cx="12" cy="12" r="3" />
-      <path d="" />
+      <path d="M24 32C10.7 32 0 42.7 0 56V456c0 13.3 10.7 24 24 24H40c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H24zm88 0c-8.8 0-16 7.2-16 16V464c0 8.8 7.2 16 16 16s16-7.2 16-16V48c0-8.8-7.2-16-16-16zm72 0c-13.3 0-24 10.7-24 24V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H184zm96 0c-13.3 0-24 10.7-24 24V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H280zM448 56V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H472c-13.3 0-24 10.7-24 24zm-64-8V464c0 8.8 7.2 16 16 16s16-7.2 16-16V48c0-8.8-7.2-16-16-16s-16 7.2-16 16z"/>
     </svg>
   </a>
   <a href="admin.php" class="app-sidebar-link">
@@ -194,6 +194,8 @@ if ($resultCheckAanvragen === 1) {
     </svg>
   </a>
 
+
+</svg>
 
   <a class="mode-switch" title="Switch Theme">
         <svg class="moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="24" height="24" viewBox="0 0 24 24">
@@ -569,6 +571,8 @@ if ($resultCheckAanvragen === 1) {
     </div>
     <?php
 
+    //het in een list zetten zoals het van de oop lessen en dan kan het werken
+
 function getStatusLabel($resultAanvraagStatus)
 {
     if ($resultAanvraagStatus == 1) {
@@ -583,23 +587,43 @@ function getStatusLabel($resultAanvraagStatus)
         return '';
     }
 }
-       echo'<div class="project-box-wrapper">';
-       echo'<div class="project-box" style="background-color: ', $BGcolor ,';">';
-       echo'<div class="project-box-content-header">';
+// Prepare the query
+$query = "SELECT aanvraag_id, datum_van, datum_tot, status FROM aanvragen LIMIT 2";
 
-       echo '<div class="naamaanvraag"> <b>Van:</b>'.  '</div>';
-       echo '<div class="naamaanvraag"> <b>Tot:</b> <tot echo hier></div>';
-       echo '<div class="naamaanvraag"> <b>Status:</b>'. '</div>';
-       echo '<div class="naamaanvraag"> <b>Product:</b> <product echo hier></div>';
+// Execute the query
+$result = $conn->query($query);
 
+// Check if the query was successful
+if ($result) {
+    // Fetch the data from the result set
+    while ($row = $result->fetch_assoc()) {
+        $aanvraagId = $row['aanvraag_id'];
+        $datumVan = $row['datum_van'];
+        $datumTot = $row['datum_tot'];
+        $status = $row['status'];
 
+        echo'<div class="project-box-wrapper">';
+        echo'<div class="project-box" style="background-color: ', $BGcolor ,';">';
+        echo'<div class="project-box-content-header">';
+ 
+        echo '<div class="naamaanvraag"> <b>Van:',  $datumVan , '</b> </div>';
+        echo '<div class="naamaanvraag"> <b>Tot:', $datumTot , '</b> <tot echo hier></div>';
+        echo '<div class="naamaanvraag"> <b>Status:</b>', getStatusLabel($status),'</div>';
+        echo '<div class="naamaanvraag"> <b>Product:</b> <product echo hier></div>';
+        echo'</div></div></div>';
+    }
 
+    // Free the result set
+    $result->free();
+} else {
+    // Query execution failed
+    echo "Error: " . $conn->error;
+}
 
-       echo'</div></div></div>';
+// Close the connection
+$conn->close();
 
-      
-        ?>
-      
+    ?>
 
 </div></div></div>
 <!-- partial -->
