@@ -1,4 +1,5 @@
 <?php include("config/db_config.php");
+require_once ("model/UitleenAanvraag.php");
   // We need to use sessions, so you should always start sessions using the below code.
   session_start();
   // If the user is not logged in redirect to the login page...
@@ -59,12 +60,6 @@ $sql = "SELECT * FROM tickets WHERE `beheerder` LIKE '%".$persoonlijkepagina."%'
 $resultTickets = mysqli_query($conn, $sql);
 $resultCheckTickets = mysqli_num_rows($resultTickets);
 
-// aanvragen id
-$sql = "SELECT 'user_id' FROM aanvragen ";
-
-$resultAanvragen = mysqli_query($conn, $sql);
-$resultCheckAanvragen = mysqli_num_rows($resultAanvragen);
-
 // een check maken waarbij die de user_id en id van tavel users vergelijkt en zo de aanvragen laat zien
 
 if ($resultCheckTickets === 0) {
@@ -87,12 +82,6 @@ if ($resultCheck === 1) {
   $projectenkelvoud = "project";
 } else {
   $projectenkelvoud = "projecten";
-}
-
-if ($resultCheckAanvragen === 1) {
-  $aanvraagenkelvoud = "aanvraag";
-} else {
-  $aanvraagenkelvoud = "aanvragen";
 }
 
 ?>
@@ -142,6 +131,8 @@ if ($resultCheckAanvragen === 1) {
       echo'<i class="fa-solid fa-user"><a href=""> Account aanpassen</a></i><br><br>';
       echo'<i class="fa-solid fa-right-from-bracket"><a href="logout.php"> Uitloggen</a></i>';
       echo'</div></div>';
+
+      $userId = $row["id"];
     }
   ?>
 </div>
@@ -183,7 +174,7 @@ if ($resultCheckAanvragen === 1) {
     <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-settings" viewBox="0 0 24 24">
       <defs />
       <circle cx="12" cy="12" r="3" />
-      <path d="" />
+      <path d="M24 32C10.7 32 0 42.7 0 56V456c0 13.3 10.7 24 24 24H40c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H24zm88 0c-8.8 0-16 7.2-16 16V464c0 8.8 7.2 16 16 16s16-7.2 16-16V48c0-8.8-7.2-16-16-16zm72 0c-13.3 0-24 10.7-24 24V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H184zm96 0c-13.3 0-24 10.7-24 24V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H280zM448 56V456c0 13.3 10.7 24 24 24h16c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24H472c-13.3 0-24 10.7-24 24zm-64-8V464c0 8.8 7.2 16 16 16s16-7.2 16-16V48c0-8.8-7.2-16-16-16s-16 7.2-16 16z"/>
     </svg>
   </a>
   <a href="admin.php" class="app-sidebar-link">
@@ -194,6 +185,8 @@ if ($resultCheckAanvragen === 1) {
     </svg>
   </a>
 
+
+</svg>
 
   <a class="mode-switch" title="Switch Theme">
         <svg class="moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="24" height="24" viewBox="0 0 24 24">
@@ -565,41 +558,71 @@ if ($resultCheckAanvragen === 1) {
       ?>
 
     <div class="projects-section-header-home" style="width:100%;">
+    <?php
+
+      // aanvragen id
+      $sql = "SELECT 'user_id' FROM aanvragen WHERE user_id = $userId";
+
+      $resultAanvragen = mysqli_query($conn, $sql);
+      $resultCheckAanvragen = mysqli_num_rows($resultAanvragen);
+      if ($resultCheckAanvragen === 1) {
+        $aanvraagenkelvoud = "aanvraag";
+      } else {
+        $aanvraagenkelvoud = "aanvragen";
+      }
+
+    ?>
     <h2>Jouw Aanvragen</h2><br><p> Je hebt <?php echo $resultCheckAanvragen; ?> <?php echo $aanvraagenkelvoud; ?>.</p><br>
     </div>
     <?php
 
-function getStatusLabel($resultAanvraagStatus)
-{
-    if ($resultAanvraagStatus == 1) {
-        return 'Goedgekeurd';
-    } elseif ($resultAanvraagStatus == 2) {
-        return 'Ingeleverd';
-    } elseif ($resultAanvraagStatus == 3) {
-        return 'Afgekeurd';
-    } elseif ($resultAanvraagStatus == 0){ 
-        return 'nog beoordelen';
-    }else {
-        return '';
+// Instantiate the class
+$uitleenAanvraag = new UitleenAanvraag();
+
+// Prepare the query
+$query = "SELECT aanvraag_id, datum_van, datum_tot, status FROM aanvragen WHERE user_id = $userId ORDER BY aanvraag_id DESC";
+
+// Execute the query
+$result = $conn->query($query);
+
+// Check if the query was successful
+if ($result) {
+    // Fetch the data from the result set
+    while ($row = $result->fetch_assoc()) {
+        $aanvraagId = $row['aanvraag_id'];
+        $datumVan = $row['datum_van'];
+        $datumTot = $row['datum_tot'];
+        $status = $row['status'];
+
+        echo '<div class="project-box-wrapper">';
+        echo '<div class="project-box" style="background-color: ', $BGcolor ,';">';
+        echo '<div class="project-box-content-header">';
+
+        echo '<div class="naamaanvraag"><b>Van: &nbsp; </b>', $datumVan, '</div>';
+        echo '<div class="naamaanvraag"><b>Tot: &nbsp; </b>', $datumTot, '</div>';
+        echo '<div class="naamaanvraag"><b>Status: &nbsp;</b>', $uitleenAanvraag->getStatusLabel($status), '</div>';
+
+        $producten = $uitleenAanvraag->getAanvraagProducten($aanvraagId);
+        $productNames = [];
+        foreach ($producten as $product) {
+            $productNames[] = $product['1']; // Access the product name using $product['1']
+        }
+        echo '<div class="naamaanvraag"><b>Product:</b> &nbsp;', implode(", ", $productNames), '</div>';
+
+        echo '</div></div></div>';
     }
+
+    // Free the result set
+    $result->free();
+} else {
+    // Query execution failed
+    echo "Error: " . $conn->error;
 }
-       echo'<div class="project-box-wrapper">';
-       echo'<div class="project-box" style="background-color: ', $BGcolor ,';">';
-       echo'<div class="project-box-content-header">';
 
-       echo '<div class="naamaanvraag"> <b>Van:</b>'.  '</div>';
-       echo '<div class="naamaanvraag"> <b>Tot:</b> <tot echo hier></div>';
-       echo '<div class="naamaanvraag"> <b>Status:</b>'. '</div>';
-       echo '<div class="naamaanvraag"> <b>Product:</b> <product echo hier></div>';
+// Close the connection
+$conn->close();
 
-
-
-
-       echo'</div></div></div>';
-
-      
-        ?>
-      
+    ?>
 
 </div></div></div>
 <!-- partial -->

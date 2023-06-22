@@ -22,41 +22,6 @@ if ($_POST != NULL) {
     }
 }
 
-function getStatusLabel($status)
-{
-    if ($status == 1) {
-        return 'Goedgekeurd';
-    } elseif ($status == 2) {
-        return 'Ingeleverd';
-    } elseif ($status == 3) {
-        return 'Afgekeurd';
-    } elseif ($status == 0){ 
-        return 'Nog beoordelen';
-    }else {
-        return '';
-    }
-}
-
-// Handle delete action
-if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
-    // Retrieve request ID from the form
-    $aanvraagId = $_POST['aanvraag_id'];
- 
-    // Perform the deletion in the database
-    $query = "DELETE FROM aanvragen WHERE aanvraag_id = $aanvraagId";
-    $result = mysqli_query($conn, $query);
- 
-    // Check for errors
-    if (!$result) {
-        echo "Error deleting the request: " . mysqli_error($conn);
-        // You may want to handle the error gracefully or redirect back to the page with an error message
-    } else {
-        // Redirect to the request summary page after successful deletion
-        header("Location: uitleen_admin_aanvragen_overzicht.php");
-        exit();
-    }
- }
- 
 ?>
 
 <!DOCTYPE html>
@@ -246,7 +211,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                         <div class="uitleenaanvraagdatums">
                             <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
                             <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b><br>
-                            <b>Status: <?php echo getStatusLabel($aanvraag['status']) ?> </b>
+                            <b>Status: <?php echo $aanvragen->getStatusLabel($aanvraag['status']) ?> </b>
                         </div>
                         <div class="uitleenaanvraagproducten">
                             <br>
