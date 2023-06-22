@@ -255,8 +255,8 @@ public function setNaam($naam) {
 public function getNaam() {
     return $this->naam;
 }
-    
-public function getStatusLabel($status)
+
+function getStatusLabel($status)
 {
     if ($status == 1) {
         return 'Goedgekeurd';
@@ -264,7 +264,9 @@ public function getStatusLabel($status)
         return 'Ingeleverd';
     } elseif ($status == 3) {
         return 'Afgekeurd';
-    } else {
+    } elseif ($status == 0){ 
+        return 'Nog beoordelen';
+    }else {
         return '';
     }
 }

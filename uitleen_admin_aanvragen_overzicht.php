@@ -22,21 +22,6 @@ if ($_POST != NULL) {
     }
 }
 
-function getStatusLabel($status)
-{
-    if ($status == 1) {
-        return 'Goedgekeurd';
-    } elseif ($status == 2) {
-        return 'Ingeleverd';
-    } elseif ($status == 3) {
-        return 'Afgekeurd';
-    } elseif ($status == 0){ 
-        return 'Nog beoordelen';
-    }else {
-        return '';
-    }
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -226,7 +211,7 @@ function getStatusLabel($status)
                         <div class="uitleenaanvraagdatums">
                             <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
                             <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b><br>
-                            <b>Status: <?php echo getStatusLabel($aanvraag['status']) ?> </b>
+                            <b>Status: <?php echo $aanvragen->getStatusLabel($aanvraag['status']) ?> </b>
                         </div>
                         <div class="uitleenaanvraagproducten">
                             <br>
