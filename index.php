@@ -1,4 +1,5 @@
 <?php include("config/db_config.php");
+require_once ("model/UitleenAanvraag.php");
   // We need to use sessions, so you should always start sessions using the below code.
   session_start();
   // If the user is not logged in redirect to the login page...
@@ -6,21 +7,6 @@
     header('Location: login.php');
     exit;
   }
-
-  function getStatusLabel($resultAanvraagStatus)
-{
-    if ($resultAanvraagStatus == 1) {
-        return 'Goedgekeurd';
-    } elseif ($resultAanvraagStatus == 2) {
-        return 'Ingeleverd';
-    } elseif ($resultAanvraagStatus == 3) {
-        return 'Afgekeurd';
-    } elseif ($resultAanvraagStatus == 0){ 
-        return 'nog beoordelen';
-    }else {
-        return '';
-    }
-}
 
 ?>
 
@@ -590,11 +576,11 @@ if ($resultCheck === 1) {
     </div>
     <?php
 
-    //het in een list zetten zoals het van de oop lessen en dan kan het werken
+// Instantiate the class
+$uitleenAanvraag = new UitleenAanvraag();
 
 // Prepare the query
-$query = "SELECT aanvraag_id, datum_van, datum_tot, status FROM aanvragen WHERE user_id = $userId LIMIT 2";
-
+$query = "SELECT aanvraag_id, datum_van, datum_tot, status FROM aanvragen WHERE user_id = $userId ORDER BY aanvraag_id DESC";
 
 // Execute the query
 $result = $conn->query($query);
@@ -608,15 +594,22 @@ if ($result) {
         $datumTot = $row['datum_tot'];
         $status = $row['status'];
 
-        echo'<div class="project-box-wrapper">';
-        echo'<div class="project-box" style="background-color: ', $BGcolor ,';">';
-        echo'<div class="project-box-content-header">';
- 
-        echo '<div class="naamaanvraag"> <b>Van: &nbsp;',  $datumVan , '</b> </div>';
-        echo '<div class="naamaanvraag"> <b>Tot: &nbsp;', $datumTot , '</b> <tot echo hier></div>';
-        echo '<div class="naamaanvraag"> <b>Status:</b> &nbsp;', getStatusLabel($status),'</div>';
-        echo '<div class="naamaanvraag"> <b>Product:</b> &nbsp; <product echo hier></div>';
-        echo'</div></div></div>';
+        echo '<div class="project-box-wrapper">';
+        echo '<div class="project-box" style="background-color: ', $BGcolor ,';">';
+        echo '<div class="project-box-content-header">';
+
+        echo '<div class="naamaanvraag"><b>Van: &nbsp; </b>', $datumVan, '</div>';
+        echo '<div class="naamaanvraag"><b>Tot: &nbsp; </b>', $datumTot, '</div>';
+        echo '<div class="naamaanvraag"><b>Status: &nbsp;</b>', $uitleenAanvraag->getStatusLabel($status), '</div>';
+
+        $producten = $uitleenAanvraag->getAanvraagProducten($aanvraagId);
+        $productNames = [];
+        foreach ($producten as $product) {
+            $productNames[] = $product['1']; // Access the product name using $product['1']
+        }
+        echo '<div class="naamaanvraag"><b>Product:</b> &nbsp;', implode(", ", $productNames), '</div>';
+
+        echo '</div></div></div>';
     }
 
     // Free the result set
