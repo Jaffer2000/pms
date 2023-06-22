@@ -37,6 +37,26 @@ function getStatusLabel($status)
     }
 }
 
+// Handle delete action
+if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
+    // Retrieve request ID from the form
+    $aanvraagId = $_POST['aanvraag_id'];
+ 
+    // Perform the deletion in the database
+    $query = "DELETE FROM aanvragen WHERE aanvraag_id = $aanvraagId";
+    $result = mysqli_query($conn, $query);
+ 
+    // Check for errors
+    if (!$result) {
+        echo "Error deleting the request: " . mysqli_error($conn);
+        // You may want to handle the error gracefully or redirect back to the page with an error message
+    } else {
+        // Redirect to the request summary page after successful deletion
+        header("Location: uitleen_admin_aanvragen_overzicht.php");
+        exit();
+    }
+ }
+ 
 ?>
 
 <!DOCTYPE html>
@@ -248,6 +268,8 @@ function getStatusLabel($status)
                                 <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd"
                                     value="Ingeleverd"
                                     onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleenverwijderen"
+                                    value="Verwijderen" onclick="return confirm('Wil je deze aanvraag verwijderen?')">
                             </form>
                         </div>
                         <?php ?>
