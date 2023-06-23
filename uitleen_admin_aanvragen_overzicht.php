@@ -272,49 +272,55 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     ?>
 
                     <?php
+                    
                     if ($totalPages > 1) {
                         echo '<div class="pagination">';
-
+                    
                         if ($page > 1) {
                             echo '<a href="?page=' . ($page - 1) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
                         } else {
                             echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
                         }
-
+                    
                         // Display the first page
                         echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1">1</a>';
-
+                    
                         // Display the ellipsis if there are more than 3 pages
                         if ($totalPages > 3) {
                             if ($page > 3) {
                                 echo '<span style="margin-right:20px;">...</span>';
                             }
+                            // Determine the start and end page numbers to display
+                            $startPage = max(2, $page - 1);
+                            $endPage = min($totalPages - 1, $startPage + 2);
+                    
+                            // Display the pages within the range
+                            for ($i = $startPage; $i <= $endPage; $i++) {
+                                $activeClass = ($i == $page) ? 'active' : '';
+                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '" class="' . $activeClass . '">' . $i . '</a>';
+                            }
+                    
+                            // Display the ellipsis if there are more pages after the displayed range
+                            if ($totalPages > $endPage) {
+                                echo '<span style="margin-right:20px;">...</span>';
+                            }
+                        } else {
+                            // Display all pages if there are 3 or fewer pages
+                            for ($i = 2; $i <= $totalPages - 1; $i++) {
+                                $activeClass = ($i == $page) ? 'active' : '';
+                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '" class="' . $activeClass . '">' . $i . '</a>';
+                            }
                         }
-
-                        // Determine the start and end page numbers to display
-                        $startPage = max(2, $page - 1);
-                        $endPage = min($totalPages - 1, $startPage + 2);
-
-                        // Display the pages within the range
-                        for ($i = $startPage; $i <= $endPage; $i++) {
-                            $activeClass = ($i == $page) ? 'active' : '';
-                            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '" class="' . $activeClass . '">' . $i . '</a>';
-                        }
-
-                        // Display the ellipsis if there are more pages after the displayed range
-                        if ($totalPages > $endPage) {
-                            echo '<span style="margin-right:20px;">...</span>';
-                        }
-
+                    
                         // Display the last page
                         echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == $totalPages ? ' text-decoration: underline;' : '') . '" href="?page=' . $totalPages . '">' . $totalPages . '</a>';
-
+                    
                         if ($page < $totalPages) {
                             echo '<a href="?page=' . ($page + 1) . '" style="color: var(--main-color); margin-left:10px;">></a>';
                         } else {
                             echo '<span style="color: var(--main-color); margin-left:10px; opacity: 0.5;">></span>';
                         }
-
+                    
                         echo '</div>';
                     } elseif ($totalPages == 0) {
                         echo 'Er zijn geen aanvragen.';

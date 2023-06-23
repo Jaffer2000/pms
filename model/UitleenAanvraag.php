@@ -80,8 +80,8 @@ class UitleenAanvraag {
             die;
         }
 
-    return [true, $aanvraag_id];
-}
+        return [true, $aanvraag_id];
+    }
 
     /**
      * saveAanvraagProduct
@@ -130,8 +130,8 @@ class UitleenAanvraag {
             die;
         }
 
-    return $aanvragen;
-}
+        return $aanvragen;
+    }
 
     /**
      * getAanvraagProducten
@@ -228,13 +228,13 @@ class UitleenAanvraag {
         return true;
 	}
     
-
-
-public function getAanvraagNaamList() {
+    public function getAanvraagNaamList() 
+    {
         $return_array = array();
 
         $query = "SeLeCt * FrOm `aanvragen` limit 1;";
         $result = $this->connect()->query($query);
+        
         // For all database results:
         foreach ($result as $idx => $array){
             // Nieuw object
@@ -245,8 +245,9 @@ public function getAanvraagNaamList() {
             // Add new object to return array.
             $return_array[] = $lijst;
         }
+        
         return $return_array;
-}
+    }
 
 public function setNaam($naam) {
     $this->naam = $naam;
