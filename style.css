@@ -2764,9 +2764,35 @@ table {
   padding-top: 0px;
 }
 
-#naamaanvraag{
+#naamaanvraag {
   color: black;
   background-color: white;
   width: 137.8px;
   height: 23.6px;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  margin-top: 20px;
+}
+
+.requests-pagination {
+  color: var(--main-color);
+  font-size: 18px;
+}
+
+.requests-pagination a,
+.requests-pagination .current-page {
+  padding: 0 10px;
+  color: var(--main-color);
+  text-decoration: none;
+}
+
+.requests-pagination .low-opacity {
+  opacity: 0.5;
+}
+
+.requests-pagination .current-page {
+  text-decoration: underline;
 }
