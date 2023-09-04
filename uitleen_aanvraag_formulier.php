@@ -24,6 +24,8 @@ if ($_POST != NULL) {
     if ($_POST['action'] == "Aanvragen") {
 
         $current_date = date('Y-m-d', time());
+        $lentOutProducts = array(); // Store lent-out products
+        $productsNotAvailable = false; // Flag to indicate product availability
 
         if ($_POST['product'] == NULL) {
             $_SESSION['alert_message'] = "Selecteer minstens 1 product";
@@ -32,78 +34,105 @@ if ($_POST != NULL) {
         } elseif ($_POST['datumvan'] < $current_date) {
             $_SESSION['alert_message'] = "Datum mag niet eerder dan vandaag zijn";
         } elseif ($_POST['product'] != NULL) {
-
-            $uitleenaanvraag = new UitleenAanvraag();
-            $aanvraag = $uitleenaanvraag->createAanvraag($_POST['datumvan'], $_POST['datumtot'], $_POST['naamaanvraag']);
-
-            // Get created aanvraag id
-            $aanvraag_id = $aanvraag[1];
-
-            // Get the full name based on the selected username
-            $query = "SELECT `naam` FROM `users` WHERE `username` = '".$_POST['naamaanvraag']."'";
-            $result = mysqli_query($conn, $query);
-            $row = mysqli_fetch_assoc($result);
-            $fullName = $row['naam'];
-
-            // Fetch coach emails with account type 'test'
-            $query = "SELECT `email` FROM `users` WHERE `accounttype` = 'test'";
-            $result = mysqli_query($conn, $query);
-            $coachEmails = array();
-
-            while ($row = mysqli_fetch_assoc($result)) {
-                $coachEmails[] = $row['email'];
-            }
-
             foreach ($_POST['product'] as $product) {
-                $uitleenaanvraag->saveAanvraagProduct($aanvraag_id, $product);
+                // Check if the product is already lent out (status = 1) during the requested date range
+                $query = "SELECT COUNT(*) AS count FROM `aanvraag_producten` ap
+                          JOIN `aanvragen` a ON ap.`aanvraag_id` = a.`aanvraag_id`
+                          WHERE ap.`product_id` = '$product' AND a.`status` = 1
+                          AND (('$current_date' BETWEEN a.`datum_van` AND a.`datum_tot`)
+                          OR ('{$_POST['datumvan']}' BETWEEN a.`datum_van` AND a.`datum_tot`)
+                          OR ('{$_POST['datumtot']}' BETWEEN a.`datum_van` AND a.`datum_tot`))";
+
+                $result = mysqli_query($conn, $query);
+                $row = mysqli_fetch_assoc($result);
+                if ($row['count'] > 0) {
+                    // Product is not available, add it to the list of lent-out products
+                    $productQuery = "SELECT `product_naam` FROM `producten` WHERE `product_id` = '$product'";
+                    $productResult = mysqli_query($conn, $productQuery);
+                    $productRow = mysqli_fetch_assoc($productResult);
+                    $lentOutProducts[] = $productRow['product_naam'];
+                    $productsNotAvailable = true; // Product is not available
+                }
             }
 
-            $_SESSION['alert_message'] = "Aanvraag succesvol aangemaakt";
+            if ($productsNotAvailable) {
+                // Display a red message for unavailable products
+                $unavailableProductNames = implode(', ', $lentOutProducts);
+                $_SESSION['alert_message'] = "De volgende product(en) is/zijn al uitgeleend tijdens deze periode: $unavailableProductNames, ";
+            } else {
+                // The products are available, proceed with the request creation
+                $uitleenaanvraag = new UitleenAanvraag();
+                $aanvraag = $uitleenaanvraag->createAanvraag($_POST['datumvan'], $_POST['datumtot'], $_POST['naamaanvraag']);
 
-            $mail = new PHPMailer(true);
+                // Get created aanvraag id
+                $aanvraag_id = $aanvraag[1];
 
-            try {
-                // Server settings
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.strato.com';
-                $mail->SMTPAuth   = true;
-                $mail->Username   = 'info@stichtingivs.nl';
-                $mail->Password   = 'FbSqDENLAJjA';
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port       = 587;
+                // Get the full name based on the selected username
+                $query = "SELECT `naam` FROM `users` WHERE `username` = '".$_POST['naamaanvraag']."'";
+                $result = mysqli_query($conn, $query);
+                $row = mysqli_fetch_assoc($result);
+                $fullName = $row['naam'];
 
-                // Sender and recipients
-                $mail->setFrom('info@stichtingivs.nl', 'Stichting IVS'); // Replace with your email and name
-                foreach ($coachEmails as $coachEmail) {
-                    $mail->addAddress($coachEmail);
+                // Fetch coach emails with account type 'test'
+                $query = "SELECT `email` FROM `users` WHERE `accounttype` = 'test'";
+                $result = mysqli_query($conn, $query);
+                $coachEmails = array();
+
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $coachEmails[] = $row['email'];
                 }
 
-                // Email content
-                $mail->isHTML(true);
-                $mail->Subject = 'Nieuwe leenaanvraag ontvangen';
-                $mail->Body    .= 'Beste,<br><br>';
-                $mail->Body    .= 'Er is zojuist een nieuwe leenaanvraag ingediend door een student. Hieronder vindt u de details van de aanvraag:';
-                $mail->Body    .= '<br><br>';
-                $mail->Body    .= 'Datum van aanvraag: ' . date('d-m-Y', strtotime($_POST['datumvan'])) . '<br>';
-                $mail->Body    .= 'Datum tot: ' . date('d-m-Y', strtotime($_POST['datumtot'])) . '<br>';
-                $mail->Body .= 'Naam aanvrager: ' . $fullName . '<br><br>';
-                $mail->Body    .= 'Geselecteerde product(en):<br>';
-
-                $producten = new UitleenAanvraag();
-                foreach ($producten->getAanvraagProducten($aanvraag[1]) as $product) {
-                    $mail->Body .= "- $product[1]<br>";
+                foreach ($_POST['product'] as $product) {
+                    $uitleenaanvraag->saveAanvraagProduct($aanvraag_id, $product);
                 }
 
-                $mail->Body    .= '<br>Indien nodig, kunt u contact opnemen met de student om verdere details of bevestiging te bespreken.';
+                $_SESSION['alert_message'] = "Aanvraag succesvol aangemaakt";
 
-                $mail->send();
+                $mail = new PHPMailer(true);
 
-                // Redirect to the same page to prevent form resubmission
-                header("Location: ".$_SERVER['PHP_SELF']);
-                exit();
+                try {
+                    // Server settings
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.strato.com';
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = 'info@stichtingivs.nl';
+                    $mail->Password   = 'FbSqDENLAJjA';
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port       = 587;
 
-            } catch (Exception $e) {
-                echo "Email could not be sent. Error: {$mail->ErrorInfo}";
+                    // Sender and recipients
+                    $mail->setFrom('info@stichtingivs.nl', 'Stichting IVS'); // Replace with your email and name
+                    foreach ($coachEmails as $coachEmail) {
+                        $mail->addAddress($coachEmail);
+                    }
+
+                    // Email content
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Nieuwe leenaanvraag ontvangen';
+                    $mail->Body    .= 'Beste,<br><br>';
+                    $mail->Body    .= 'Er is zojuist een nieuwe leenaanvraag ingediend door een student. Hieronder vindt u de details van de aanvraag:';
+                    $mail->Body    .= '<br><br>';
+                    $mail->Body    .= 'Datum van aanvraag: ' . date('d-m-Y', strtotime($_POST['datumvan'])) . '<br>';
+                    $mail->Body    .= 'Datum tot: ' . date('d-m-Y', strtotime($_POST['datumtot'])) . '<br>';
+                    $mail->Body .= 'Naam aanvrager: ' . $fullName . '<br><br>';
+                    $mail->Body    .= 'Geselecteerde product(en):<br>';
+
+                    $producten = new UitleenAanvraag();
+                    foreach ($producten->getAanvraagProducten($aanvraag[1]) as $product) {
+                        $mail->Body .= "- $product[1]<br>";
+                    }
+
+                    $mail->Body    .= '<br>Indien nodig, kunt u contact opnemen met de student om verdere details of bevestiging te bespreken.';
+
+                    $mail->send();
+
+                    // Redirect to the same page to prevent form resubmission
+                    header("Location: ".$_SERVER['PHP_SELF']);
+                    exit();
+
+                } catch (Exception $e) {
+                    echo "Email could not be sent. Error: {$mail->ErrorInfo}";
+                }
             }
         }
     }
@@ -219,7 +248,6 @@ if (isset($_SESSION['alert_message'])) {
 
             while($row = mysqli_fetch_assoc($rows))
             {
-
                 echo'<div class="dropdown" style="float:right;">';
                 echo'<div class="headeraccounts">';
                 echo'<img src="img/avatar.png" alt="Avatar" class="avatar">';
@@ -319,37 +347,46 @@ if (isset($_SESSION['alert_message'])) {
                             <table class="uitleenaanvragentable">
                                 <tr>
                                     <td><label for="datumvan"><b>Datum van:</b></label></td>
-                                    <td><input type="date" id="datumvan" name="datumvan" required></td>
+                                    <td><input type="date" id="datumvan" name="datumvan" required
+                                            value="<?php echo isset($_POST['datumvan']) ? $_POST['datumvan'] : ''; ?>">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><label for="datumtot"><b>Datum tot:</b></label></td>
-                                    <td><input type="date" id="datumtot" name="datumtot" required></td>
+                                    <td><input type="date" id="datumtot" name="datumtot" required
+                                            value="<?php echo isset($_POST['datumtot']) ? $_POST['datumtot'] : ''; ?>">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><label for="naamaanvraag"><b>Je naam:</b></label></td>
-                                    <td><select name="naamaanvraag" id="naamaanvraag">
+                                    <td>
+                                        <select name="naamaanvraag" id="naamaanvraag">
                                             <?php
-                                        $sql = "SELECT `username`, `naam` FROM users";
-                                        $resultnamen = mysqli_query($conn, $sql);
-                                        $resultChecknamen = mysqli_num_rows($resultnamen);
-                                                while($row = mysqli_fetch_assoc($resultnamen)){
-                                                    echo '<option value="'.$row["username"].'">'.$row["naam"].'</option>';
-
-                                                }
-                                            ?>
-                                        </select></td>
+                            $sql = "SELECT `username`, `naam` FROM users";
+                            $resultnamen = mysqli_query($conn, $sql);
+                            $resultChecknamen = mysqli_num_rows($resultnamen);
+                            while ($row = mysqli_fetch_assoc($resultnamen)) {
+                                $selected = (isset($_POST['naamaanvraag']) && $_POST['naamaanvraag'] == $row["username"]) ? 'selected' : '';
+                                echo '<option value="' . $row["username"] . '" ' . $selected . '>' . $row["naam"] . '</option>';
+                            }
+                            ?>
+                                        </select>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
 
                         <div class="uitleenaanvragenproducten">
                             <?php $producten = new UitleenProduct();
-                        foreach($producten->getAllProducts() as $product) { ?>
+                            foreach ($producten->getAllProducts() as $product) {
+                            $isChecked = (isset($_POST['product']) && in_array($product["product_id"], $_POST['product'])) ? 'checked' : '';
+                            ?>
                             <div class="uitleenaanvragenproduct">
                                 <label class="uitleenaanvragenproductcheckbox"
                                     for="product<?php echo $product["product_id"] ?>"><?php echo $product["product_naam"] ?>
                                     <input type="checkbox" id="product<?php echo $product["product_id"] ?>"
-                                        name="product[]" value="<?php echo $product["product_id"] ?>">
+                                        name="product[]" value="<?php echo $product["product_id"] ?>"
+                                        <?php echo $isChecked; ?>>
                                 </label>
                             </div>
                             <?php } ?>
@@ -358,7 +395,6 @@ if (isset($_SESSION['alert_message'])) {
                         <div class="uitleenaanvragenknop">
                             <input type="submit" class="uitleenaanvragenbutton" name="action" value="Aanvragen">
                         </div>
-
                     </form>
                 </div>
             </div>
