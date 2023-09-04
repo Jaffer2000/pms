@@ -58,7 +58,7 @@ if ($_POST != NULL) {
             if ($productsNotAvailable) {
                 // Display a red message for unavailable products
                 $unavailableProductNames = implode(', ', $lentOutProducts);
-                $_SESSION['alert_message'] = "De volgende product(en) is/zijn al uitgeleend tijdens deze periode: $unavailableProductNames, ";
+                $_SESSION['alert_message'] = "De volgende product(en) is/zijn al uitgeleend tijdens deze periode: $unavailableProductNames";
             } else {
                 // The products are available, proceed with the request creation
                 $uitleenaanvraag = new UitleenAanvraag();
