@@ -195,7 +195,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                 <div class="projects-section-header">
                     <p>Aanvragen overzicht</p>
                     <div>
-                    <?php 
+                        <?php 
                     // Check if a filter option was submitted
                     if(isset($_GET['status'])) {
                         $selectedStatus = $_GET['status'];
@@ -211,28 +211,34 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     }
                     ?>
 
-                    <p>
-                    <form action="uitleen_admin_aanvragen_overzicht.php" method="get" class="status-filter-form">
-                        <label for="status-filter">Filter op status:</label>
+                        <p>
+                        <form action="uitleen_admin_aanvragen_overzicht.php" method="get" class="status-filter-form">
+                            <label for="status-filter">Filter op status:</label>
                             <select name="status" id="status-filter">
-                                <option class="filteropties" value="all" <?php if($selectedStatus == 'all') echo 'selected'; ?>>Alle</option>
-                                <option class="filteropties" value="0" <?php if($selectedStatus == '0') echo 'selected'; ?>>Nog beoordelen</option>
-                                <option class="filteropties" value="1" <?php if($selectedStatus == '1') echo 'selected'; ?>>Goedgekeurd</option>
-                                <option class="filteropties" value="3" <?php if($selectedStatus == '3') echo 'selected'; ?>>Afgekeurd</option>
-                                <option class="filteropties" value="2" <?php if($selectedStatus == '2') echo 'selected'; ?>>Ingeleverd</option>
-                        </select>
-                        <button type="submit">Filteren</button>
-                    </form>
-                    </p>
-                </div>
+                                <option class="filteropties" value="all"
+                                    <?php if($selectedStatus == 'all') echo 'selected'; ?>>Alle</option>
+                                <option class="filteropties" value="0"
+                                    <?php if($selectedStatus == '0') echo 'selected'; ?>>Nog beoordelen</option>
+                                <option class="filteropties" value="1"
+                                    <?php if($selectedStatus == '1') echo 'selected'; ?>>Goedgekeurd</option>
+                                <option class="filteropties" value="3"
+                                    <?php if($selectedStatus == '3') echo 'selected'; ?>>Afgekeurd</option>
+                                <option class="filteropties" value="2"
+                                    <?php if($selectedStatus == '2') echo 'selected'; ?>>Ingeleverd</option>
+                            </select>
+                            <button type="submit">Filteren</button>
+                        </form>
+                        </p>
+                    </div>
                     <div class="newprojectbutton">
                         <a href="uitleen_admin_producten.php"><button> Naar product beheer</button></a>
-                        <a href="admin.php"><button><i class="fas fa-arrow-circle-left"></i> Terug naar admin portaal</button></a>
+                        <a href="admin.php"><button><i class="fas fa-arrow-circle-left"></i> Terug naar admin
+                                portaal</button></a>
                     </div>
-                    
+
                 </div>
                 <div class="uitleenaanvragenoverzichtaanvragen scroll">
-    <?php
+                    <?php
     $aanvragen = new UitleenAanvraag();
     $totalAanvragen = count($aanvragen->getAllAanvragen());
     $perPage = 8;
@@ -267,44 +273,44 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
         }
         ?>
 
-        <div class="uitleenaanvraag">
-            <?php
+                    <div class="uitleenaanvraag">
+                        <?php
             $naam = new User();
             $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
             ?>
-            <h2> <?php echo $naamaanvraag ?></h2>
-            <div class="uitleenaanvraagdatums">
-                <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
-                <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b><br>
-                <b>Status: <?php echo $aanvragen->getStatusLabel($aanvraag['status']) ?> </b>
-            </div>
-            <div class="uitleenaanvraagproducten">
-                <br>
-                <b>Aangevraagde product(en):</b>
-                <?php $producten = new UitleenAanvraag();
+                        <h2> <?php echo $naamaanvraag ?></h2>
+                        <div class="uitleenaanvraagdatums">
+                            <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
+                            <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b><br>
+                            <b>Status: <?php echo $aanvragen->getStatusLabel($aanvraag['status']) ?> </b>
+                        </div>
+                        <div class="uitleenaanvraagproducten">
+                            <br>
+                            <b>Aangevraagde product(en):</b>
+                            <?php $producten = new UitleenAanvraag();
                 foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
-                    <div class="uitleenaanvraagproduct">
-                        <b><?php echo $product[1] ?></b>
+                            <div class="uitleenaanvraagproduct">
+                                <b><?php echo $product[1] ?></b>
+                            </div>
+                            <?php } ?>
+                        </div>
+                        <div class="uitleenaanvraagbuttons">
+                            <form action="uitleen_admin_aanvragen_overzicht.php" method="post">
+                                <input type="hidden" name="aanvraag_id" value="<?php echo $aanvraag['aanvraag_id'] ?>">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
+                                    value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleenafkeuren"
+                                    value="Afkeuren" onclick="return confirm('Wil je deze aanvraag afkeuren?')">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd"
+                                    value="Ingeleverd"
+                                    onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleenverwijderen"
+                                    value="Verwijderen" onclick="return confirm('Wil je deze aanvraag verwijderen?')">
+                            </form>
+                        </div>
                     </div>
-                <?php } ?>
-            </div>
-            <div class="uitleenaanvraagbuttons">
-                <form action="uitleen_admin_aanvragen_overzicht.php" method="post">
-                    <input type="hidden" name="aanvraag_id" value="<?php echo $aanvraag['aanvraag_id'] ?>">
-                    <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
-                           value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
-                    <input type="submit" name="action" class="uitleenaanvraagbutton uitleenafkeuren"
-                           value="Afkeuren" onclick="return confirm('Wil je deze aanvraag afkeuren?')">
-                    <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd"
-                           value="Ingeleverd"
-                           onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
-                    <input type="submit" name="action" class="uitleenaanvraagbutton uitleenverwijderen"
-                           value="Verwijderen" onclick="return confirm('Wil je deze aanvraag verwijderen?')">
-                </form>
-            </div>
-        </div>
 
-        <?php
+                    <?php
         $rowCount++;
 
         if ($rowCount % 4 === 0 || $rowCount === count($currentPageAanvragen)) {
@@ -314,14 +320,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
     }
     ?>
 
-
-    <?php
-
-    if ($totalPages > 1) {
-        echo '<div class="pagination">';
+                    <?php
                     
-        if ($totalPages > 1) {
-            echo '<div class="pagination">';
+            if ($totalPages > 1) {
+                echo '<div class="pagination">';
             
             if ($page > 1) {
                 // Include the current filter criteria in the pagination link
@@ -376,7 +378,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     } elseif ($totalPages == 0) {
                         echo 'Er zijn geen aanvragen.';
                     }      
-                }        
+        
                     ?>
                 </div>
             </div>
