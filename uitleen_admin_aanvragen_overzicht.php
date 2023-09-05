@@ -239,39 +239,39 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                 </div>
                 <div class="uitleenaanvragenoverzichtaanvragen scroll">
                     <?php
-    $aanvragen = new UitleenAanvraag();
-    $totalAanvragen = count($aanvragen->getAllAanvragen());
-    $perPage = 8;
-    $totalPages = ceil($totalAanvragen / $perPage);
+                    $aanvragen = new UitleenAanvraag();
+                    $totalAanvragen = count($aanvragen->getAllAanvragen());
+                    $perPage = 8;
+                    $totalPages = ceil($totalAanvragen / $perPage);
 
-    $page = isset($_GET['page']) ? $_GET['page'] : 1;
-    $start = ($page - 1) * $perPage;
-    $end = $start + $perPage;
+                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                    $start = ($page - 1) * $perPage;
+                    $end = $start + $perPage;
 
-    // Update this line to get the selected status from the query parameter
-    $selectedStatus = isset($_GET['status']) ? $_GET['status'] : 'all';
+                    // Update this line to get the selected status from the query parameter
+                    $selectedStatus = isset($_GET['status']) ? $_GET['status'] : 'all';
 
-    $allAanvragen = $aanvragen->getAllAanvragen();
+                    $allAanvragen = $aanvragen->getAllAanvragen();
 
-    // Filter the requests based on the selected status
-    $filteredAanvragen = ($selectedStatus === 'all') ?
-        $allAanvragen :
-        array_filter($allAanvragen, function ($aanvraag) use ($selectedStatus) {
-            return $aanvraag['status'] === $selectedStatus;
-        });
+                    // Filter the requests based on the selected status
+                    $filteredAanvragen = ($selectedStatus === 'all') ?
+                        $allAanvragen :
+                        array_filter($allAanvragen, function ($aanvraag) use ($selectedStatus) {
+                            return $aanvraag['status'] === $selectedStatus;
+                        });
 
-    $currentPageAanvragen = array_slice($filteredAanvragen, $start, $perPage);
-    $rowCount = 0; // Counter for tracking the number of requests in a row
+                    $currentPageAanvragen = array_slice($filteredAanvragen, $start, $perPage);
+                    $rowCount = 0; // Counter for tracking the number of requests in a row
 
-    foreach ($currentPageAanvragen as $aanvraag) {
-        $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
-        $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
+                    foreach ($currentPageAanvragen as $aanvraag) {
+                        $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
+                        $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
 
-        if ($rowCount % 4 === 0) {
-            // Start a new row after every 4 requests
-            echo '<div class="row">';
-        }
-        ?>
+                        if ($rowCount % 4 === 0) {
+                            // Start a new row after every 4 requests
+                            echo '<div class="row">';
+                        }
+                        ?>
 
                     <div class="uitleenaanvraag">
                         <?php
@@ -313,7 +313,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     </div>
 
                     <?php
-        $rowCount++;
+                    $rowCount++;
 
         if ($rowCount % 4 === 0 || $rowCount === count($currentPageAanvragen)) {
             // End the row after every 4 requests or at the end of requests
@@ -323,21 +323,32 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
     ?>
 
                     <?php
+
+                    // Calculate the total number of pages based on the filtered results
+                    $totalFilteredPages = ceil(count($filteredAanvragen) / $perPage);
+
+                    // Modify the $totalPages variable to use $totalFilteredPages when filtering is applied
+                    $totalPages = ($selectedStatus === 'all') ? ceil($totalAanvragen / $perPage) : $totalFilteredPages;
                     
             if ($totalPages > 1) {
                 echo '<div class="pagination">';
+
+                        // Display the pages based on $totalFilteredPages when filtering is applied
+                        for ($i = 2; $i <= $totalFilteredPages - 1; $i++) {
+                            $activeClass = ($i == $page) ? 'active' : '';
+                            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '" class="' . $activeClass . '">' . $i . '</a>';
+                        }
             
-            if ($page > 1) {
-                // Include the current filter criteria in the pagination link
-                echo '<a href="?page=' . ($page - 1) . '&status=' . urlencode($selectedStatus) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
-            } else {
-                echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
-            }
+                        if ($page > 1) {
+                            // Include the current filter criteria in the pagination link
+                            echo '<a href="?page=' . ($page - 1) . '&status=' . urlencode($selectedStatus) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
+                        } else {
+                            echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
+                        }
                     
                         // Display the first page
                         echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1&status=' . urlencode($selectedStatus) . '">1</a>';
 
-                    
                         // Display the ellipsis if there are more than 3 pages
                         if ($totalPages > 3) {
                             if ($page > 3) {
