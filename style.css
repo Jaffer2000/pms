@@ -2796,3 +2796,9 @@ table {
 .requests-pagination .current-page {
   text-decoration: underline;
 }
+
+.filteropties {
+  color: #ffffff;
+  background-color: #1f2634;
+  border-color: #1f2634;
+}
