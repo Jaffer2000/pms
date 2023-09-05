@@ -275,9 +275,9 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
 
                     <div class="uitleenaanvraag">
                         <?php
-            $naam = new User();
-            $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
-            ?>
+                        $naam = new User();
+                        $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
+                        ?>
                         <h2> <?php echo $naamaanvraag ?></h2>
                         <div class="uitleenaanvraagdatums">
                             <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
@@ -288,14 +288,16 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             <br>
                             <b>Aangevraagde product(en):</b>
                             <?php $producten = new UitleenAanvraag();
-                foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
+                                foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
                             <div class="uitleenaanvraagproduct">
                                 <b><?php echo $product[1] ?></b>
                             </div>
                             <?php } ?>
                         </div>
                         <div class="uitleenaanvraagbuttons">
-                            <form action="uitleen_admin_aanvragen_overzicht.php" method="post">
+                            <form
+                                action="uitleen_admin_aanvragen_overzicht.php?page=<?php echo $page; ?>&status=<?php echo urlencode($selectedStatus); ?>"
+                                method="post">
                                 <input type="hidden" name="aanvraag_id" value="<?php echo $aanvraag['aanvraag_id'] ?>">
                                 <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
                                     value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
