@@ -194,40 +194,90 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
             <div class="projects-section">
                 <div class="projects-section-header">
                     <p>Aanvragen overzicht</p>
+                    <div>
+                        <?php 
+                    // Check if a filter option was submitted
+                    if(isset($_GET['status'])) {
+                        $selectedStatus = $_GET['status'];
+                        $_SESSION['selected_status'] = $selectedStatus; // Store the selected status in a session variable
+                    } else {
+                        // If no filter option submitted, check if there's a previously selected status in the session
+                        if(isset($_SESSION['selected_status'])) {
+                            $selectedStatus = $_SESSION['selected_status'];
+                        } else {
+                            // Default value if no filter option is selected or stored in the session
+                            $selectedStatus = 'all';
+                        }
+                    }
+                    ?>
 
+                        <p>
+                        <form action="uitleen_admin_aanvragen_overzicht.php" method="get" class="status-filter-form">
+                            <label for="status-filter">Filter op status:</label>
+                            <select name="status" id="status-filter">
+                                <option class="filteropties" value="all"
+                                    <?php if($selectedStatus == 'all') echo 'selected'; ?>>Alle</option>
+                                <option class="filteropties" value="0"
+                                    <?php if($selectedStatus == '0') echo 'selected'; ?>>Nog beoordelen</option>
+                                <option class="filteropties" value="1"
+                                    <?php if($selectedStatus == '1') echo 'selected'; ?>>Goedgekeurd</option>
+                                <option class="filteropties" value="3"
+                                    <?php if($selectedStatus == '3') echo 'selected'; ?>>Afgekeurd</option>
+                                <option class="filteropties" value="2"
+                                    <?php if($selectedStatus == '2') echo 'selected'; ?>>Ingeleverd</option>
+                            </select>
+                            <button type="submit">Filteren</button>
+                        </form>
+                        </p>
+                    </div>
                     <div class="newprojectbutton">
                         <a href="uitleen_admin_producten.php"><button> Naar product beheer</button></a>
                         <a href="admin.php"><button><i class="fas fa-arrow-circle-left"></i> Terug naar admin
                                 portaal</button></a>
                     </div>
+
                 </div>
                 <div class="uitleenaanvragenoverzichtaanvragen scroll">
                     <?php
-                    $aanvragen = new UitleenAanvraag();
-                    $totalAanvragen = count($aanvragen->getAllAanvragen());
-                    $perPage = 8;
-                    $totalPages = ceil($totalAanvragen / $perPage);
+    $aanvragen = new UitleenAanvraag();
+    $totalAanvragen = count($aanvragen->getAllAanvragen());
+    $perPage = 8;
+    $totalPages = ceil($totalAanvragen / $perPage);
 
-                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                    $start = ($page - 1) * $perPage;
-                    $end = $start + $perPage;
-                    $currentPageAanvragen = array_slice($aanvragen->getAllAanvragen(), $start, $perPage);
-                    $rowCount = 0; // Counter for tracking the number of requests in a row
+    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $start = ($page - 1) * $perPage;
+    $end = $start + $perPage;
 
-                    foreach ($currentPageAanvragen as $aanvraag) {
-                        $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
-                        $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
+    // Update this line to get the selected status from the query parameter
+    $selectedStatus = isset($_GET['status']) ? $_GET['status'] : 'all';
 
-                        if ($rowCount % 4 === 0) {
-                            // Start a new row after every 4 requests
-                            echo '<div class="row">';
-                        }
-                        ?>
+    $allAanvragen = $aanvragen->getAllAanvragen();
+
+    // Filter the requests based on the selected status
+    $filteredAanvragen = ($selectedStatus === 'all') ?
+        $allAanvragen :
+        array_filter($allAanvragen, function ($aanvraag) use ($selectedStatus) {
+            return $aanvraag['status'] === $selectedStatus;
+        });
+
+    $currentPageAanvragen = array_slice($filteredAanvragen, $start, $perPage);
+    $rowCount = 0; // Counter for tracking the number of requests in a row
+
+    foreach ($currentPageAanvragen as $aanvraag) {
+        $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
+        $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
+
+        if ($rowCount % 4 === 0) {
+            // Start a new row after every 4 requests
+            echo '<div class="row">';
+        }
+        ?>
 
                     <div class="uitleenaanvraag">
                         <?php
-                            $naam = new User();
-                            $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);?>
+            $naam = new User();
+            $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
+            ?>
                         <h2> <?php echo $naamaanvraag ?></h2>
                         <div class="uitleenaanvraagdatums">
                             <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
@@ -238,7 +288,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             <br>
                             <b>Aangevraagde product(en):</b>
                             <?php $producten = new UitleenAanvraag();
-                                foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
+                foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
                             <div class="uitleenaanvraagproduct">
                                 <b><?php echo $product[1] ?></b>
                             </div>
@@ -258,32 +308,33 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                                     value="Verwijderen" onclick="return confirm('Wil je deze aanvraag verwijderen?')">
                             </form>
                         </div>
-                        <?php ?>
                     </div>
 
                     <?php
-                    $rowCount++;
+        $rowCount++;
 
-                    if ($rowCount % 4 === 0 || $rowCount === count($currentPageAanvragen)) {
-                        // End the row after every 4 requests or at the end of requests
-                        echo '</div>';
-                    }
-                 }
-                    ?>
+        if ($rowCount % 4 === 0 || $rowCount === count($currentPageAanvragen)) {
+            // End the row after every 4 requests or at the end of requests
+            echo '</div>';
+        }
+    }
+    ?>
 
                     <?php
                     
-                    if ($totalPages > 1) {
-                        echo '<div class="pagination">';
-                    
-                        if ($page > 1) {
-                            echo '<a href="?page=' . ($page - 1) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
-                        } else {
-                            echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
-                        }
+            if ($totalPages > 1) {
+                echo '<div class="pagination">';
+            
+            if ($page > 1) {
+                // Include the current filter criteria in the pagination link
+                echo '<a href="?page=' . ($page - 1) . '&status=' . urlencode($selectedStatus) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
+            } else {
+                echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
+            }
                     
                         // Display the first page
-                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1">1</a>';
+                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1&status=' . urlencode($selectedStatus) . '">1</a>';
+
                     
                         // Display the ellipsis if there are more than 3 pages
                         if ($totalPages > 3) {
@@ -291,13 +342,14 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                                 echo '<span style="margin-right:20px;">...</span>';
                             }
                             // Determine the start and end page numbers to display
-                            $startPage = max(2, $page - 1);
+                            $startPage = max(2, $page - 1); 
                             $endPage = min($totalPages - 1, $startPage + 2);
                     
                             // Display the pages within the range
                             for ($i = $startPage; $i <= $endPage; $i++) {
                                 $activeClass = ($i == $page) ? 'active' : '';
-                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '" class="' . $activeClass . '">' . $i . '</a>';
+                                // Include both 'page' and 'status' parameters in the pagination link
+                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '" class="' . $activeClass . '">' . $i . '</a>';
                             }
                     
                             // Display the ellipsis if there are more pages after the displayed range
@@ -308,25 +360,26 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             // Display all pages if there are 3 or fewer pages
                             for ($i = 2; $i <= $totalPages - 1; $i++) {
                                 $activeClass = ($i == $page) ? 'active' : '';
-                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '" class="' . $activeClass . '">' . $i . '</a>';
+                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '" class="' . $activeClass . '">' . $i . '</a>';
                             }
                         }
                     
                         // Display the last page
-                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == $totalPages ? ' text-decoration: underline;' : '') . '" href="?page=' . $totalPages . '">' . $totalPages . '</a>';
+                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == $totalPages ? ' text-decoration: underline;' : '') . '" href="?page=' . $totalPages . '&status=' . urlencode($selectedStatus) .'">' . $totalPages . '</a>';
                     
                         if ($page < $totalPages) {
-                            echo '<a href="?page=' . ($page + 1) . '" style="color: var(--main-color); margin-left:10px;">></a>';
+                            // Include the current filter criteria in the pagination link
+                            echo '<a href="?page=' . ($page + 1) . '&status=' . urlencode($selectedStatus) . '" style="color: var(--main-color); margin-left:10px;">></a>';
                         } else {
                             echo '<span style="color: var(--main-color); margin-left:10px; opacity: 0.5;">></span>';
                         }
-                    
+                        
                         echo '</div>';
                     } elseif ($totalPages == 0) {
                         echo 'Er zijn geen aanvragen.';
-                    }
+                    }      
+        
                     ?>
-
                 </div>
             </div>
         </div>
