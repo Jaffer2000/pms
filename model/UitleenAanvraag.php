@@ -117,7 +117,7 @@ class UitleenAanvraag {
     {
         // get all aanvragen
         try {
-            $sql = "SELECT * FROM `aanvragen` ORDER BY aanvraag_id";
+            $sql = "SELECT * FROM `aanvragen` ORDER BY aanvraag_id DESC";
             $result = mysqli_query($this->connect(), $sql);
             $aanvragen = [];
 
