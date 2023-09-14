@@ -22,29 +22,25 @@ if ($_POST != NULL) {
     }
 }
 
+// Handle delete action
 if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
-    // Haalt ID op uit het formulier
+    // Retrieve request ID from the form
     $aanvraagId = $_POST['aanvraag_id'];
  
-    // Verwijderd de item uit de DB
+    // Perform the deletion in the database
     $query = "DELETE FROM aanvragen WHERE aanvraag_id = $aanvraagId";
     $result = mysqli_query($conn, $query);
  
-    // Kijkt of er errors zijn
+    // Check for errors
     if (!$result) {
-        echo "Er is iets fout gegaan met het verwijderen van de aanvraag: " . mysqli_error($conn);
-        // Als er een error is krijg je die hier te horen
+        echo "Error deleting the request: " . mysqli_error($conn);
+        // You may want to handle the error gracefully or redirect back to the page with an error message
     } else {
-        // Get the current pagination and filter parameters
-        $page = isset($_GET['page']) ? $_GET['page'] : 1;
-        $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
-
-        // Redirect back to the same page with the same pagination and filter parameters
-        header("Location: uitleen_admin_aanvragen_overzicht.php?page=$page&filter=$filter");
+        // Redirect to the request summary page after successful deletion
+        header("Location: uitleen_admin_aanvragen_overzicht.php");
         exit();
     }
-}
-
+ }
  
 
 ?>
