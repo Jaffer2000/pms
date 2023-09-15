@@ -2802,3 +2802,86 @@ table {
   background-color: #1f2634;
   border-color: #1f2634;
 }
+
+.statusformaanvragen{
+  height: 40px;
+}
+
+.filteraanvraagoverzicht{
+  color: white;
+  padding-left: 5px;
+  text-decoration: none;
+}
+
+.nogbeoordelen {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #F8B682;
+  text-align: center; 
+  line-height: 25px;
+  font-size: 15px;
+  color: black;
+  font-weight: bold;
+}
+
+
+.goedgekeurd {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background-color: #00A319; 
+  text-align: center;
+  line-height: 25px;
+  font-size: 15px;
+  color: black;
+  font-weight: bold;
+}
+
+.afgekeurd{
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background-color: #FE4A41; 
+  text-align: center;
+  line-height: 25px;
+  font-size: 15px;
+  color: black;
+  font-weight: bold;
+}
+
+.ingeleverd {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background-color: #F8B682; 
+  text-align: center;
+  line-height: 25px;
+  font-size: 15px; 
+  color: black;
+  text-decoration: none;
+  font-weight: bold; 
+}
+
+.alle {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%; 
+  background-color: white;
+  text-align: center;
+  line-height: 25px;
+  font-size: 15px;
+  color: black;
+  font-weight: bold;
+}
+
+
+
+.alleaanvragen{
+  margin-left: 10px;
+}

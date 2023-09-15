@@ -2,6 +2,8 @@
 require_once("model/UitleenAanvraag.php");
 require_once("model/User.php");
 
+$status = $_GET["status"];
+
 session_start();
 // Als de admin niet is ingelogd verwijzen we door naar de inlogpagina
 if (!isset($_SESSION['loggedinadmin'])) {
@@ -35,12 +37,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
         echo "Er is iets fout gegaan met het verwijderen van de aanvraag: " . mysqli_error($conn);
         // Als er een error is krijg je die hier te horen
     } else {
-        // Get the current pagination and filter parameters
-        $page = isset($_GET['page']) ? $_GET['page'] : 1;
-        $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
-
-        // Redirect back to the same page with the same pagination and filter parameters
-        header("Location: uitleen_admin_aanvragen_overzicht.php?page=$page&filter=$filter");
+        header("Location: uitleen_admin_aanvragen_overzicht.php?page=$page&filter=$filter?status=$status&page=$page");
         exit();
     }
 }
@@ -213,9 +210,34 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             $selectedStatus = 'all';
                         }
                     }
+
+                    $sql = "SELECT * FROM `aanvragen` WHERE status='0';"; // Nog beoordelen
+
+                    $nogbeoordelen = mysqli_query($conn, $sql);
+                    $resultnogbeoordelen = mysqli_num_rows($nogbeoordelen);
+
+                    $sql = "SELECT * FROM `aanvragen` WHERE status='1';"; // Goedgekeurd
+
+                    $goedgekeurd = mysqli_query($conn, $sql);
+                    $resultgoedgekeurd = mysqli_num_rows($goedgekeurd);
+
+                    $sql = "SELECT * FROM `aanvragen` WHERE status='2';"; // Ingeleverd
+
+                    $ingeleverd = mysqli_query($conn, $sql);
+                    $resultingeleverd = mysqli_num_rows($ingeleverd);
+
+                    $sql = "SELECT * FROM `aanvragen` WHERE status='3';"; // Afgekeurd
+
+                    $afgekeurd = mysqli_query($conn, $sql);
+                    $resultafgekeurd = mysqli_num_rows($afgekeurd);
+
+                    $sql = "SELECT * FROM `aanvragen`"; // alle
+
+                    $alle = mysqli_query($conn, $sql);
+                    $resultalle = mysqli_num_rows($alle);
                     ?>
 
-                        <p>
+                        <!-- <p>
                         <form action="uitleen_admin_aanvragen_overzicht.php" method="get" class="status-filter-form">
                             <label for="status-filter">Filter op status:</label>
                             <select name="status" id="status-filter">
@@ -232,12 +254,42 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             </select>
                             <button type="submit">Filteren</button>
                         </form>
-                        </p>
+                        </p> -->
                     </div>
                     <div class="newprojectbutton">
                         <a href="uitleen_admin_producten.php"><button> Naar product beheer</button></a>
                         <a href="admin.php"><button><i class="fas fa-arrow-circle-left"></i> Terug naar admin
                                 portaal</button></a>
+                    </div>
+
+                </div>
+
+                <div class="projects-section-line">
+                    <div class="projects-status">
+
+
+                        <div class="item-status">
+                            <form action="" method="post" class="statusformulier statusformaanvragen">
+                                
+                                <div class="status-type"><span class="nogbeoordelen"
+                                        ><?php echo $resultnogbeoordelen ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=0" class="filteraanvraagoverzicht" >Nog beoordelen</a><i class="fa-solid fa-arrow-right"
+                                        style="color:white; margin-left:6px;"></i></div>
+
+                                <div class="status-type"><span class="goedgekeurd"
+                                       ><?php echo $resultgoedgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=1" class="filteraanvraagoverzicht" >Goedgekeurd</a><i
+                                        class="fa-solid fa-forward-slash" style="color:white; margin-left:6px;"></i></div>
+
+                                <div class="status-type"><span class="afgekeurd"
+                                      ><?php echo $resultafgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3" class="filteraanvraagoverzicht" >Afgekeurd</a><i
+                                        class="fa-solid fa-arrow-right" style="color:white; margin-left:6px;"></i></div>
+
+                                <div class="status-type"><span class="ingeleverd"
+                                        ><?php echo $resultingeleverd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=2" class="filteraanvraagoverzicht" >Ingeleverd</a></div>
+                            </form>
+                            <div class="status-type alleaanvragen" style="margin-left:"><span class="alle"
+                                    ><?php echo$resultalle ?></span><a href="uitleen_admin_aanvragen_overzicht.php?status=all"
+                                    class="filterbutton"><b style="margin-right:5px;"> Alle</b></a></div>
+                        </div>
                     </div>
 
                 </div>
@@ -299,9 +351,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             <?php } ?>
                         </div>
                         <div class="uitleenaanvraagbuttons">
-                            <form
-                                action="uitleen_admin_aanvragen_overzicht.php?page=<?php echo $page; ?>&status=<?php echo urlencode($selectedStatus); ?>"
-                                method="post">
+                            <form action="uitleen_admin_aanvragen_overzicht.php?status=<?php echo"$status&page=$page";?>" method="post">
                                 <input type="hidden" name="aanvraag_id" value="<?php echo $aanvraag['aanvraag_id'] ?>">
                                 <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
                                     value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
@@ -310,7 +360,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                                 <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd"
                                     value="Ingeleverd"
                                     onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleenverwijderen"
+                                <input type="submit" name="action" class="uitleenaanvraagbutton "
                                     value="Verwijderen" onclick="return confirm('Wil je deze aanvraag verwijderen?')">
                             </form>
                         </div>
@@ -410,7 +460,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
             x.play();
         }
         </script>
-
+ 
         <!-- Script voor de animatie bij de melding -->
         <script>
         var close = document.getElementsByClassName("closebtn");
@@ -427,6 +477,27 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
         }
         </script>
     </div>
+
+    <?php
+
+if (isset($_POST["nogbeoordelen"])) {
+    $result = $nogbeoordelen;
+    $resultCheck = $resultnogbeoordelen;
+  } elseif (isset($_POST["goedgekeurd"])) {    
+    $result = $goedgekeurd;
+    $resultCheck = $resultgoedgekeurd;
+  } elseif (isset($_POST["afgekeurd"])) {    
+    $result = $afgekeurd;
+    $resultCheck = $resultafgekeurd;
+  } elseif (isset($_POST["ingeleverd"])) {    
+    $result = $ingeleverd;
+    $resultCheck = $resultingeleverd;
+  } else  {
+    $result = $alle; 
+    $resultCheck = $resultalle;
+  }
+
+?>
 </body>
 
 </html>
