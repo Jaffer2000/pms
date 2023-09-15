@@ -99,7 +99,7 @@ if ($resultCheck === 1) {
                 <div class="item-status">
                     <span class="status-type3"> <?php
       echo " <b>" . $datetime . "</b>";?><br>
-                        Je bekijkt de <b>templates pagina</b></span>
+                        Je bekijkt de <b>Templates pagina</b></span>
                 </div>
 
             </div>

@@ -110,7 +110,7 @@ if ($resultCheck === 1) {
                 <div class="item-status">
                     <span class="status-type3"> <?php
       echo " <b>" . $datetime . "</b>";?><br>
-                        Je bekijkt je persoonlijke <b>homepage</b></span>
+                        Je bekijkt je persoonlijke <b>Homepage</b></span>
                 </div>
 
             </div>

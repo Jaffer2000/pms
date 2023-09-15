@@ -233,7 +233,7 @@ if (isset($_SESSION['alert_message'])) {
                 <div class="item-status">
                     <span class="status-type3"> <?php
                         echo " <b>" . $datetime . "</b>";?><br>
-                        Je bekijkt het <b>producten aanvragen formulier</b></span>
+                        Je bekijkt het <b>Producten aanvragen formulier</b></span>
                 </div>
 
             </div>
@@ -361,6 +361,7 @@ if (isset($_SESSION['alert_message'])) {
                                     <td><label for="naamaanvraag"><b>Je naam:</b></label></td>
                                     <td>
                                         <select name="naamaanvraag" id="naamaanvraag">
+                                            <option value="select name">Selecteer naam</option>
                                             <?php
                             $sql = "SELECT `username`, `naam` FROM users";
                             $resultnamen = mysqli_query($conn, $sql);
