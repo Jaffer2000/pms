@@ -211,24 +211,18 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     }
                     ?>
 
-                        <p>
-                        <form action="uitleen_admin_aanvragen_overzicht.php" method="get" class="status-filter-form">
-                            <label for="status-filter">Filter op status:</label>
-                            <select name="status" id="status-filter">
-                                <option class="filteropties" value="all"
-                                    <?php if($selectedStatus == 'all') echo 'selected'; ?>>Alle</option>
-                                <option class="filteropties" value="0"
-                                    <?php if($selectedStatus == '0') echo 'selected'; ?>>Nog beoordelen</option>
-                                <option class="filteropties" value="1"
-                                    <?php if($selectedStatus == '1') echo 'selected'; ?>>Goedgekeurd</option>
-                                <option class="filteropties" value="3"
-                                    <?php if($selectedStatus == '3') echo 'selected'; ?>>Afgekeurd</option>
-                                <option class="filteropties" value="2"
-                                    <?php if($selectedStatus == '2') echo 'selected'; ?>>Ingeleverd</option>
-                            </select>
-                            <button type="submit">Filteren</button>
-                        </form>
-                        </p>
+                        <label for="student-dropdown">Selecteer student:</label>
+                        <select id="student-dropdown" onchange="filterByStudent()">
+                            <option class="filteropties" style="background-color: blue;" value="">Alle studenten
+                            </option>
+                            <?php
+                                $user = new User();
+                                $students = $user->getAllStudents();
+                                foreach ($students as $student) {
+                                    echo "<option class='filteropties' value='" . $student['username'] . "'>" . $student['naam'] . "</option>";
+                                }
+                                ?>
+                        </select>
                     </div>
                     <div class="newprojectbutton">
                         <a href="uitleen_admin_producten.php"><button> Naar product beheer</button></a>
@@ -248,28 +242,28 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     $start = ($page - 1) * $perPage;
                     $end = $start + $perPage;
 
-                    // Update this line to get the selected status from the query parameter
-                    $selectedStatus = isset($_GET['status']) ? $_GET['status'] : 'all';
+                    // Update this line to get the selected student from the query parameter
+                    $selectedStudent = isset($_GET['student']) ? $_GET['student'] : '';
 
                     $allAanvragen = $aanvragen->getAllAanvragen();
 
-                    // Filter the requests based on the selected status
-                    $filteredAanvragen = ($selectedStatus === 'all') ?
+                    // Filter the requests based on the selected student
+                    $filteredAanvragen = ($selectedStudent === '') ?
                         $allAanvragen :
-                        array_filter($allAanvragen, function ($aanvraag) use ($selectedStatus) {
-                            return $aanvraag['status'] === $selectedStatus;
+                        array_filter($allAanvragen, function ($aanvraag) use ($selectedStudent) {
+                            return $aanvraag['naamaanvraag'] === $selectedStudent;
                         });
 
                     $currentPageAanvragen = array_slice($filteredAanvragen, $start, $perPage);
                     $rowCount = 0; // Counter for tracking the number of requests in a row
 
                     foreach ($currentPageAanvragen as $aanvraag) {
-                        $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
-                        $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
+                    $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
+                    $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
 
-                        if ($rowCount % 4 === 0) {
-                            // Start a new row after every 4 requests
-                            echo '<div class="row">';
+                    if ($rowCount % 4 === 0) {
+                    // Start a new row after every 4 requests
+                    echo '<div class="row">';
                         }
                         ?>
 
@@ -421,6 +415,31 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                 }, 600);
             }
         }
+
+        // Function to set the selected option in the dropdown
+        function setSelectedStudent() {
+            var selectedStudent = "<?php echo isset($_GET['student']) ? $_GET['student'] : ''; ?>";
+            var dropdown = document.getElementById("student-dropdown");
+            for (var i = 0; i < dropdown.options.length; i++) {
+                if (dropdown.options[i].value === selectedStudent) {
+                    dropdown.selectedIndex = i;
+                    return;
+                }
+            }
+            // Set the dropdown to "All Students" if no student is selected
+            dropdown.selectedIndex = 0;
+        }
+
+        // Function to filter requests based on the selected student
+        function filterByStudent() {
+            var selectedStudent = document.getElementById("student-dropdown").value;
+            window.location.href =
+                'uitleen_admin_aanvragen_overzicht.php?page=1&status=<?php echo urlencode($selectedStatus); ?>&student=' +
+                selectedStudent;
+        }
+
+        // Call the function to set the selected option when the page loads
+        window.onload = setSelectedStudent;
         </script>
     </div>
 </body>
