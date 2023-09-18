@@ -169,8 +169,8 @@ class UitleenProduct {
             INNER JOIN aanvraag_producten ON aanvragen.aanvraag_id = aanvraag_producten.aanvraag_id
             INNER JOIN users ON aanvragen.user_id = users.id
             WHERE aanvraag_producten.product_id = ?
-            AND (aanvragen.status = 1 OR aanvragen.status = 2) 
-            ORDER BY aanvragen.aanvraag_id ASC
+            AND (aanvragen.status = 2) 
+            ORDER BY aanvragen.aanvraag_id DESC
             LIMIT 1
         ");
 
