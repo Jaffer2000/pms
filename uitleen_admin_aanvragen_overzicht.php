@@ -237,24 +237,18 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     $resultalle = mysqli_num_rows($alle);
                     ?>
 
-                        <!-- <p>
-                        <form action="uitleen_admin_aanvragen_overzicht.php" method="get" class="status-filter-form">
-                            <label for="status-filter">Filter op status:</label>
-                            <select name="status" id="status-filter">
-                                <option class="filteropties" value="all"
-                                    <?php if($selectedStatus == 'all') echo 'selected'; ?>>Alle</option>
-                                <option class="filteropties" value="0"
-                                    <?php if($selectedStatus == '0') echo 'selected'; ?>>Nog beoordelen</option>
-                                <option class="filteropties" value="1"
-                                    <?php if($selectedStatus == '1') echo 'selected'; ?>>Goedgekeurd</option>
-                                <option class="filteropties" value="3"
-                                    <?php if($selectedStatus == '3') echo 'selected'; ?>>Afgekeurd</option>
-                                <option class="filteropties" value="2"
-                                    <?php if($selectedStatus == '2') echo 'selected'; ?>>Ingeleverd</option>
-                            </select>
-                            <button type="submit">Filteren</button>
-                        </form>
-                        </p> -->
+                        <label for="student-dropdown">Selecteer student:</label>
+                        <select id="student-dropdown" onchange="filterByStudent()">
+                            <option class="filteropties" style="background-color: blue;" value="">Alle studenten
+                            </option>
+                            <?php
+                                $user = new User();
+                                $students = $user->getAllStudents();
+                                foreach ($students as $student) {
+                                    echo "<option class='filteropties' value='" . $student['username'] . "'>" . $student['naam'] . "</option>";
+                                }
+                                ?>
+                        </select>
                     </div>
                     <div class="newprojectbutton">
                         <a href="uitleen_admin_producten.php"><button> Naar product beheer</button></a>
@@ -270,25 +264,31 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
 
                         <div class="item-status">
                             <form action="" method="post" class="statusformulier statusformaanvragen">
-                                
-                                <div class="status-type"><span class="nogbeoordelen"
-                                        ><?php echo $resultnogbeoordelen ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=0" class="filteraanvraagoverzicht" >Nog beoordelen</a><i class="fa-solid fa-arrow-right"
-                                        style="color:white; margin-left:6px;"></i></div>
 
-                                <div class="status-type"><span class="goedgekeurd"
-                                       ><?php echo $resultgoedgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=1" class="filteraanvraagoverzicht" >Goedgekeurd</a><i
-                                        class="fa-solid fa-forward-slash" style="color:white; margin-left:6px;"></i></div>
-
-                                <div class="status-type"><span class="afgekeurd"
-                                      ><?php echo $resultafgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3" class="filteraanvraagoverzicht" >Afgekeurd</a><i
+                                <div class="status-type"><span class="nogbeoordelen"><?php echo $resultnogbeoordelen ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=0"
+                                        class="filteraanvraagoverzicht">Nog beoordelen</a><i
                                         class="fa-solid fa-arrow-right" style="color:white; margin-left:6px;"></i></div>
 
-                                <div class="status-type"><span class="ingeleverd"
-                                        ><?php echo $resultingeleverd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=2" class="filteraanvraagoverzicht" >Ingeleverd</a></div>
+                                <div class="status-type"><span class="goedgekeurd"><?php echo $resultgoedgekeurd ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=1"
+                                        class="filteraanvraagoverzicht">Goedgekeurd</a><i
+                                        class="fa-solid fa-forward-slash" style="color:white; margin-left:6px;"></i>
+                                </div>
+
+                                <div class="status-type"><span class="afgekeurd"><?php echo $resultafgekeurd ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3"
+                                        class="filteraanvraagoverzicht">Afgekeurd</a><i class="fa-solid fa-arrow-right"
+                                        style="color:white; margin-left:6px;"></i></div>
+
+                                <div class="status-type"><span class="ingeleverd"><?php echo $resultingeleverd ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=2"
+                                        class="filteraanvraagoverzicht">Ingeleverd</a></div>
                             </form>
-                            <div class="status-type alleaanvragen" style="margin-left:"><span class="alle"
-                                    ><?php echo$resultalle ?></span><a href="uitleen_admin_aanvragen_overzicht.php?status=all"
-                                    class="filterbutton"><b style="margin-right:5px;"> Alle</b></a></div>
+                            <div class="status-type alleaanvragen" style="margin-left:"><span
+                                    class="alle"><?php echo$resultalle ?></span><a
+                                    href="uitleen_admin_aanvragen_overzicht.php?status=all" class="filterbutton"><b
+                                        style="margin-right:5px;"> Alle</b></a></div>
                         </div>
                     </div>
 
@@ -304,28 +304,28 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     $start = ($page - 1) * $perPage;
                     $end = $start + $perPage;
 
-                    // Update this line to get the selected status from the query parameter
-                    $selectedStatus = isset($_GET['status']) ? $_GET['status'] : 'all';
+                    // Update this line to get the selected student from the query parameter
+                    $selectedStudent = isset($_GET['student']) ? $_GET['student'] : '';
 
                     $allAanvragen = $aanvragen->getAllAanvragen();
 
-                    // Filter the requests based on the selected status
-                    $filteredAanvragen = ($selectedStatus === 'all') ?
+                    // Filter the requests based on the selected student
+                    $filteredAanvragen = ($selectedStudent === '') ?
                         $allAanvragen :
-                        array_filter($allAanvragen, function ($aanvraag) use ($selectedStatus) {
-                            return $aanvraag['status'] === $selectedStatus;
+                        array_filter($allAanvragen, function ($aanvraag) use ($selectedStudent) {
+                            return $aanvraag['naamaanvraag'] === $selectedStudent;
                         });
 
                     $currentPageAanvragen = array_slice($filteredAanvragen, $start, $perPage);
                     $rowCount = 0; // Counter for tracking the number of requests in a row
 
                     foreach ($currentPageAanvragen as $aanvraag) {
-                        $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
-                        $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
+                    $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
+                    $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
 
-                        if ($rowCount % 4 === 0) {
-                            // Start a new row after every 4 requests
-                            echo '<div class="row">';
+                    if ($rowCount % 4 === 0) {
+                    // Start a new row after every 4 requests
+                    echo '<div class="row">';
                         }
                         ?>
 
@@ -351,7 +351,9 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             <?php } ?>
                         </div>
                         <div class="uitleenaanvraagbuttons">
-                            <form action="uitleen_admin_aanvragen_overzicht.php?status=<?php echo"$status&page=$page";?>" method="post">
+                            <form
+                                action="uitleen_admin_aanvragen_overzicht.php?status=<?php echo"$status&page=$page";?>"
+                                method="post">
                                 <input type="hidden" name="aanvraag_id" value="<?php echo $aanvraag['aanvraag_id'] ?>">
                                 <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
                                     value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
@@ -360,8 +362,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                                 <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd"
                                     value="Ingeleverd"
                                     onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton "
-                                    value="Verwijderen" onclick="return confirm('Wil je deze aanvraag verwijderen?')">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton " value="Verwijderen"
+                                    onclick="return confirm('Wil je deze aanvraag verwijderen?')">
                             </form>
                         </div>
                     </div>
@@ -460,7 +462,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
             x.play();
         }
         </script>
- 
+
         <!-- Script voor de animatie bij de melding -->
         <script>
         var close = document.getElementsByClassName("closebtn");
@@ -475,6 +477,31 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                 }, 600);
             }
         }
+
+        // Function to set the selected option in the dropdown
+        function setSelectedStudent() {
+            var selectedStudent = "<?php echo isset($_GET['student']) ? $_GET['student'] : ''; ?>";
+            var dropdown = document.getElementById("student-dropdown");
+            for (var i = 0; i < dropdown.options.length; i++) {
+                if (dropdown.options[i].value === selectedStudent) {
+                    dropdown.selectedIndex = i;
+                    return;
+                }
+            }
+            // Set the dropdown to "All Students" if no student is selected
+            dropdown.selectedIndex = 0;
+        }
+
+        // Function to filter requests based on the selected student
+        function filterByStudent() {
+            var selectedStudent = document.getElementById("student-dropdown").value;
+            window.location.href =
+                'uitleen_admin_aanvragen_overzicht.php?page=1&status=<?php echo urlencode($selectedStatus); ?>&student=' +
+                selectedStudent;
+        }
+
+        // Call the function to set the selected option when the page loads
+        window.onload = setSelectedStudent;
         </script>
     </div>
 
