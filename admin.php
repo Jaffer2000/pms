@@ -412,7 +412,7 @@ $resultCheckadministratienummer = mysqli_num_rows($resultadministratienummer);
                     <article class="box-admin-portaal">
                         <h1>Producten</h1>
                         <p>Uitgeleende producten<br>inzien</p>
-                        <button onclick="window.location='uitleen_admin_aanvragen_overzicht.php';"
+                        <button onclick="window.location='uitleen_admin_aanvragen_overzicht.php?status=all';"
                             class="breakout-button" type="button">Producten beheren ➕</button>
                     </article>
 
