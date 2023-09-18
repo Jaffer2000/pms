@@ -2,7 +2,9 @@
 require_once("model/UitleenAanvraag.php");
 require_once("model/User.php");
 
-$status = $_GET["status"];
+$status = isset($_GET["status"]) ? $_GET["status"] : "default_value";
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
 
 session_start();
 // Als de admin niet is ingelogd verwijzen we door naar de inlogpagina
@@ -37,7 +39,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
         echo "Er is iets fout gegaan met het verwijderen van de aanvraag: " . mysqli_error($conn);
         // Als er een error is krijg je die hier te horen
     } else {
-        header("Location: uitleen_admin_aanvragen_overzicht.php?page=$page&filter=$filter?status=$status&page=$page");
+        header("Location: uitleen_admin_aanvragen_overzicht.php?status=$status&page=$current_page");
         exit();
     }
 }
@@ -236,25 +238,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     $alle = mysqli_query($conn, $sql);
                     $resultalle = mysqli_num_rows($alle);
                     ?>
-
-                        <!-- <p>
-                        <form action="uitleen_admin_aanvragen_overzicht.php" method="get" class="status-filter-form">
-                            <label for="status-filter">Filter op status:</label>
-                            <select name="status" id="status-filter">
-                                <option class="filteropties" value="all"
-                                    <?php if($selectedStatus == 'all') echo 'selected'; ?>>Alle</option>
-                                <option class="filteropties" value="0"
-                                    <?php if($selectedStatus == '0') echo 'selected'; ?>>Nog beoordelen</option>
-                                <option class="filteropties" value="1"
-                                    <?php if($selectedStatus == '1') echo 'selected'; ?>>Goedgekeurd</option>
-                                <option class="filteropties" value="3"
-                                    <?php if($selectedStatus == '3') echo 'selected'; ?>>Afgekeurd</option>
-                                <option class="filteropties" value="2"
-                                    <?php if($selectedStatus == '2') echo 'selected'; ?>>Ingeleverd</option>
-                            </select>
-                            <button type="submit">Filteren</button>
-                        </form>
-                        </p> -->
                     </div>
                     <div class="newprojectbutton">
                         <a href="uitleen_admin_producten.php"><button> Naar product beheer</button></a>
@@ -295,14 +278,16 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                 </div>
                 <div class="uitleenaanvragenoverzichtaanvragen scroll">
                     <?php
-                    $aanvragen = new UitleenAanvraag();
-                    $totalAanvragen = count($aanvragen->getAllAanvragen());
-                    $perPage = 8;
-                    $totalPages = ceil($totalAanvragen / $perPage);
-
-                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                    $start = ($page - 1) * $perPage;
-                    $end = $start + $perPage;
+                  $aanvragen = new UitleenAanvraag();
+                  $totalAanvragen = count($aanvragen->getAllAanvragen());
+                  $perPage = 8;
+                  $totalPages = ceil($totalAanvragen / $perPage);
+                  
+                  // Make sure to cast the 'page' parameter to an integer
+                  $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                  
+                  $start = ($page - 1) * $perPage;
+                  $end = $start + $perPage;
 
                     // Update this line to get the selected status from the query parameter
                     $selectedStatus = isset($_GET['status']) ? $_GET['status'] : 'all';
