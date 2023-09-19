@@ -342,7 +342,7 @@ if (isset($_SESSION['alert_message'])) {
                 </div>
 
                 <div class="uitleenaanvragenformulier">
-                    <form action="uitleen_aanvraag_formulier.php" method="post">
+                    <form action="uitleen_aanvraag_formulier.php" method="post" onsubmit="return validateForm()">
                         <div class="uitleenaanvragendatums">
                             <table class="uitleenaanvragentable">
                                 <tr>
@@ -363,14 +363,14 @@ if (isset($_SESSION['alert_message'])) {
                                         <select name="naamaanvraag" id="naamaanvraag">
                                             <option value="select name">Selecteer naam</option>
                                             <?php
-                            $sql = "SELECT `username`, `naam` FROM users";
-                            $resultnamen = mysqli_query($conn, $sql);
-                            $resultChecknamen = mysqli_num_rows($resultnamen);
-                            while ($row = mysqli_fetch_assoc($resultnamen)) {
-                                $selected = (isset($_POST['naamaanvraag']) && $_POST['naamaanvraag'] == $row["username"]) ? 'selected' : '';
-                                echo '<option value="' . $row["username"] . '" ' . $selected . '>' . $row["naam"] . '</option>';
-                            }
-                            ?>
+                                            $sql = "SELECT `username`, `naam` FROM users";
+                                            $resultnamen = mysqli_query($conn, $sql);
+                                            $resultChecknamen = mysqli_num_rows($resultnamen);
+                                            while ($row = mysqli_fetch_assoc($resultnamen)) {
+                                                $selected = (isset($_POST['naamaanvraag']) && $_POST['naamaanvraag'] == $row["username"]) ? 'selected' : '';
+                                                echo '<option value="' . $row["username"] . '" ' . $selected . '>' . $row["naam"] . '</option>';
+                                            }
+                                            ?>
                                         </select>
                                     </td>
                                 </tr>
@@ -402,7 +402,19 @@ if (isset($_SESSION['alert_message'])) {
         </div>
         <!-- partial -->
         <script src="script/script.js"></script>
+        <script>
+        function validateForm() {
+            var selectedOption = document.getElementById("naamaanvraag").value;
 
+            // Check if the selected option is "Selecteer naam"
+            if (selectedOption === "select name") {
+                alert("Selecteer je naam, alsjeblieft.");
+                return false;
+            }
+
+            return true;
+        }
+        </script>
 </body>
 
 </html>
