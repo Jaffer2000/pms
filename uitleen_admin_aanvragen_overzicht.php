@@ -249,32 +249,49 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
 
                 <div class="projects-section-line">
                     <div class="projects-status">
-
-
                         <div class="item-status">
                             <form action="" method="post" class="statusformulier statusformaanvragen">
-                                
-                                <div class="status-type"><span class="nogbeoordelen"
-                                        ><?php echo $resultnogbeoordelen ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=0" class="filteraanvraagoverzicht" >Nog beoordelen</a><i class="fa-solid fa-arrow-right"
-                                        style="color:white; margin-left:6px;"></i></div>
 
-                                <div class="status-type"><span class="goedgekeurd"
-                                       ><?php echo $resultgoedgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=1" class="filteraanvraagoverzicht" >Goedgekeurd</a><i
-                                        class="fa-solid fa-forward-slash" style="color:white; margin-left:6px;"></i></div>
-
-                                <div class="status-type"><span class="afgekeurd"
-                                      ><?php echo $resultafgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3" class="filteraanvraagoverzicht" >Afgekeurd</a><i
+                                <div class="status-type"><span class="nogbeoordelen"><?php echo $resultnogbeoordelen ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=0"
+                                        class="filteraanvraagoverzicht">Nog beoordelen</a><i
                                         class="fa-solid fa-arrow-right" style="color:white; margin-left:6px;"></i></div>
 
-                                <div class="status-type"><span class="ingeleverd"
-                                        ><?php echo $resultingeleverd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=2" class="filteraanvraagoverzicht" >Ingeleverd</a></div>
+                                <div class="status-type"><span class="goedgekeurd"><?php echo $resultgoedgekeurd ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=1"
+                                        class="filteraanvraagoverzicht">Goedgekeurd</a><i
+                                        class="fa-solid fa-forward-slash" style="color:white; margin-left:6px;"></i>
+                                </div>
+
+                                <div class="status-type"><span class="afgekeurd"><?php echo $resultafgekeurd ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3"
+                                        class="filteraanvraagoverzicht">Afgekeurd</a><i class="fa-solid fa-arrow-right"
+                                        style="color:white; margin-left:6px;"></i></div>
+
+                                <div class="status-type"><span class="ingeleverd"><?php echo $resultingeleverd ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=2"
+                                        class="filteraanvraagoverzicht">Ingeleverd</a></div>
                             </form>
-                            <div class="status-type alleaanvragen" style="margin-left:"><span class="alle"
-                                    ><?php echo$resultalle ?></span><a href="uitleen_admin_aanvragen_overzicht.php?status=all"
-                                    class="filterbutton"><b style="margin-right:5px;"> Alle</b></a></div>
+                            <div class="status-type alleaanvragen" style="margin-left:"><span
+                                    class="alle"><?php echo$resultalle ?></span><a
+                                    href="uitleen_admin_aanvragen_overzicht.php?status=all" class="filterbutton"><b
+                                        style="margin-right:5px;"> Alle</b></a></div>
                         </div>
                     </div>
-
+                    <div style="margin-top: 10px; margin-right: -50px; font-size: 14px;">
+                        <label style="color: white;" for="student-dropdown">Filter op naam:</label>
+                        <select id="student-dropdown" onchange="filterByStudent()">
+                            <option class="filteropties" value="">Selecteer naam
+                            </option>
+                            <?php
+                                $user = new User();
+                                $students = $user->getAllStudents();
+                                foreach ($students as $student) {
+                                    echo "<option class='filteropties' value='" . $student['username'] . "'>" . $student['naam'] . "</option>";
+                                }
+                                ?>
+                        </select>
+                    </div>
                 </div>
                 <div class="uitleenaanvragenoverzichtaanvragen scroll">
                     <?php
@@ -289,18 +306,28 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                   $start = ($page - 1) * $perPage;
                   $end = $start + $perPage;
 
-                    // Update this line to get the selected status from the query parameter
-                    $selectedStatus = isset($_GET['status']) ? $_GET['status'] : 'all';
-
-                    $allAanvragen = $aanvragen->getAllAanvragen();
-
-                    // Filter the requests based on the selected status
-                    $filteredAanvragen = ($selectedStatus === 'all') ?
-                        $allAanvragen :
-                        array_filter($allAanvragen, function ($aanvraag) use ($selectedStatus) {
-                            return $aanvraag['status'] === $selectedStatus;
-                        });
-
+                
+                  // Update this line to get the selected status from the query parameter
+                  $selectedStatus = isset($_GET['status']) ? $_GET['status'] : 'all';
+                  $selectedStudent = isset($_GET['student']) ? $_GET['student'] : '';
+                  
+                  $allAanvragen = $aanvragen->getAllAanvragen();
+                  
+                  // Filter the requests based on the selected status and student
+                  $filteredAanvragen = ($selectedStatus === 'all') ?
+                      $allAanvragen :
+                      array_filter($allAanvragen, function ($aanvraag) use ($selectedStatus) {
+                          return $aanvraag['status'] === $selectedStatus;
+                      });
+                  
+                  // Further filter based on selected student if a student is selected
+                  if ($selectedStudent) {
+                      $filteredAanvragen = array_filter($filteredAanvragen, function ($aanvraag) use ($selectedStudent) {
+                          return $aanvraag['naamaanvraag'] === $selectedStudent;
+                      });
+                  }
+                  
+                  
                     $currentPageAanvragen = array_slice($filteredAanvragen, $start, $perPage);
                     $rowCount = 0; // Counter for tracking the number of requests in a row
 
@@ -336,7 +363,9 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             <?php } ?>
                         </div>
                         <div class="uitleenaanvraagbuttons">
-                            <form action="uitleen_admin_aanvragen_overzicht.php?status=<?php echo"$status&page=$page";?>" method="post">
+                            <form
+                                action="uitleen_admin_aanvragen_overzicht.php?status=<?php echo"$status&page=$page";?>"
+                                method="post">
                                 <input type="hidden" name="aanvraag_id" value="<?php echo $aanvraag['aanvraag_id'] ?>">
                                 <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
                                     value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
@@ -345,8 +374,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                                 <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd"
                                     value="Ingeleverd"
                                     onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton "
-                                    value="Verwijderen" onclick="return confirm('Wil je deze aanvraag verwijderen?')">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton " value="Verwijderen"
+                                    onclick="return confirm('Wil je deze aanvraag verwijderen?')">
                             </form>
                         </div>
                     </div>
@@ -369,25 +398,25 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     // Modify the $totalPages variable to use $totalFilteredPages when filtering is applied
                     $totalPages = ($selectedStatus === 'all') ? ceil($totalAanvragen / $perPage) : $totalFilteredPages;
                     
-            if ($totalPages > 1) {
-                echo '<div class="pagination">';
-
+                    if ($totalPages > 1) {
+                        echo '<div class="pagination">';
+                    
                         // Display the pages based on $totalFilteredPages when filtering is applied
                         for ($i = 2; $i <= $totalFilteredPages - 1; $i++) {
                             $activeClass = ($i == $page) ? 'active' : '';
-                            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '" class="' . $activeClass . '">' . $i . '</a>';
+                            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
                         }
-            
+                    
                         if ($page > 1) {
                             // Include the current filter criteria in the pagination link
-                            echo '<a href="?page=' . ($page - 1) . '&status=' . urlencode($selectedStatus) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
+                            echo '<a href="?page=' . ($page - 1) . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
                         } else {
                             echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
                         }
                     
                         // Display the first page
-                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1&status=' . urlencode($selectedStatus) . '">1</a>';
-
+                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '">1</a>';
+                    
                         // Display the ellipsis if there are more than 3 pages
                         if ($totalPages > 3) {
                             if ($page > 3) {
@@ -400,8 +429,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             // Display the pages within the range
                             for ($i = $startPage; $i <= $endPage; $i++) {
                                 $activeClass = ($i == $page) ? 'active' : '';
-                                // Include both 'page' and 'status' parameters in the pagination link
-                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '" class="' . $activeClass . '">' . $i . '</a>';
+                                // Include both 'page', 'status', and 'student' parameters in the pagination link
+                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
                             }
                     
                             // Display the ellipsis if there are more pages after the displayed range
@@ -412,16 +441,16 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             // Display all pages if there are 3 or fewer pages
                             for ($i = 2; $i <= $totalPages - 1; $i++) {
                                 $activeClass = ($i == $page) ? 'active' : '';
-                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '" class="' . $activeClass . '">' . $i . '</a>';
+                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
                             }
                         }
                     
                         // Display the last page
-                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == $totalPages ? ' text-decoration: underline;' : '') . '" href="?page=' . $totalPages . '&status=' . urlencode($selectedStatus) .'">' . $totalPages . '</a>';
+                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == $totalPages ? ' text-decoration: underline;' : '') . '" href="?page=' . $totalPages . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) .'">' . $totalPages . '</a>';
                     
                         if ($page < $totalPages) {
                             // Include the current filter criteria in the pagination link
-                            echo '<a href="?page=' . ($page + 1) . '&status=' . urlencode($selectedStatus) . '" style="color: var(--main-color); margin-left:10px;">></a>';
+                            echo '<a href="?page=' . ($page + 1) . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" style="color: var(--main-color); margin-left:10px;">></a>';
                         } else {
                             echo '<span style="color: var(--main-color); margin-left:10px; opacity: 0.5;">></span>';
                         }
@@ -429,7 +458,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                         echo '</div>';
                     } elseif ($totalPages == 0) {
                         echo 'Er zijn geen aanvragen.';
-                    }      
+                    }                    
         
                     ?>
                 </div>
@@ -445,7 +474,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
             x.play();
         }
         </script>
- 
+
         <!-- Script voor de animatie bij de melding -->
         <script>
         var close = document.getElementsByClassName("closebtn");
@@ -460,6 +489,25 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                 }, 600);
             }
         }
+        </script>
+        <script>
+        function filterByStudent() {
+            const selectedStudent = document.getElementById('student-dropdown').value;
+            if (selectedStudent) {
+                window.location.href = `uitleen_admin_aanvragen_overzicht.php?student=${selectedStudent}`;
+            } else {
+                window.location.href = 'uitleen_admin_aanvragen_overzicht.php';
+            }
+        }
+
+        // Set the selected student in the dropdown after the page loads
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentParam = urlParams.get('student');
+            if (studentParam) {
+                document.getElementById('student-dropdown').value = studentParam;
+            }
+        };
         </script>
     </div>
 
