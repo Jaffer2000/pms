@@ -360,8 +360,8 @@ if (isset($_SESSION['alert_message'])) {
                                 <tr>
                                     <td><label for="naamaanvraag"><b>Je naam:</b></label></td>
                                     <td>
-                                        <select name="naamaanvraag" id="naamaanvraag">
-                                            <option value="select name">Selecteer naam</option>
+                                        <select name="naamaanvraag" id="naamaanvraag" >
+                                            <option value="select name" required>Selecteer naam</option>
                                             <?php
                             $sql = "SELECT `username`, `naam` FROM users";
                             $resultnamen = mysqli_query($conn, $sql);

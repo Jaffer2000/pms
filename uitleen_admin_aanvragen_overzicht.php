@@ -44,7 +44,50 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
     }
 }
 
- 
+function getBackgroundColorClass($status) {
+    switch ($status) {
+        case '2':
+            return 'uitleenaanvraag-ingeleverd'; // Define a CSS class for green background
+        case '1':
+            return 'uitleenaanvraag-goedgekeurd'; // Define a CSS class for red background
+        case '3':
+            return 'uitleenaanvraag-afgekeurd'; // Define a CSS class for blue background
+        default:
+            return 'uitleenaanvraag-nogbeoordelen'; // Define a default CSS class
+    }
+} 
+
+function getTextColorClass($status) {
+    switch ($status) {
+        case 0:
+            return 'text-default'; // Use a CSS class name for the default text and button color
+        case 1:
+            return 'text-goedgekeurd'; // Use a CSS class name for green text and button color
+        case 2:
+            return 'text-ingeleverd'; // Use a CSS class name for red text and button color
+        case 3:
+            return 'text-afgekeurd'; // Use a CSS class name for blue text and button color
+        default:
+            return 'text-default'; // Use a CSS class name for the default text and button color
+    }
+}
+
+function getButtonColorClass($status) {
+    switch ($status) {
+        case 0:
+            return 'button-default'; // Use a CSS class name for the default text and button color
+        case 1:
+            return 'button-goedgekeurd'; // Use a CSS class name for green text and button color
+        case 2:
+            return 'button-ingeleverd'; // Use a CSS class name for red text and button color
+        case 3:
+            return 'button-afgekeurd'; // Use a CSS class name for blue text and button color
+        default:
+            return 'text-and-button-default'; // Use a CSS class name for the default text and button color
+    }
+}
+
+
 
 ?>
 
@@ -255,23 +298,23 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                             <form action="" method="post" class="statusformulier statusformaanvragen">
                                 
                                 <div class="status-type"><span class="nogbeoordelen"
-                                        ><?php echo $resultnogbeoordelen ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=0" class="filteraanvraagoverzicht" >Nog beoordelen</a><i class="fa-solid fa-arrow-right"
+                                        ><?php echo $resultnogbeoordelen ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=0" class="filterbutton filteraanvraagoverzicht" >Nog beoordelen</a><i class="fa-solid fa-arrow-right"
                                         style="color:white; margin-left:6px;"></i></div>
 
                                 <div class="status-type"><span class="goedgekeurd"
-                                       ><?php echo $resultgoedgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=1" class="filteraanvraagoverzicht" >Goedgekeurd</a><i
+                                       ><?php echo $resultgoedgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=1" class="filterbutton filteraanvraagoverzicht" >Goedgekeurd</a><i
                                         class="fa-solid fa-forward-slash" style="color:white; margin-left:6px;"></i></div>
 
                                 <div class="status-type"><span class="afgekeurd"
-                                      ><?php echo $resultafgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3" class="filteraanvraagoverzicht" >Afgekeurd</a><i
+                                      ><?php echo $resultafgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3" class=" filterbutton filteraanvraagoverzicht" >Afgekeurd</a><i
                                         class="fa-solid fa-arrow-right" style="color:white; margin-left:6px;"></i></div>
 
                                 <div class="status-type"><span class="ingeleverd"
-                                        ><?php echo $resultingeleverd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=2" class="filteraanvraagoverzicht" >Ingeleverd</a></div>
+                                        ><?php echo $resultingeleverd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=2" class=" filterbutton filteraanvraagoverzicht" >Ingeleverd</a></div>
                             </form>
                             <div class="status-type alleaanvragen" style="margin-left:"><span class="alle"
                                     ><?php echo$resultalle ?></span><a href="uitleen_admin_aanvragen_overzicht.php?status=all"
-                                    class="filterbutton"><b style="margin-right:5px;"> Alle</b></a></div>
+                                    class="filterbutton"><b style="margin-right:5px;"> Allen</b></a></div>
                         </div>
                     </div>
 
@@ -280,7 +323,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                     <?php
                   $aanvragen = new UitleenAanvraag();
                   $totalAanvragen = count($aanvragen->getAllAanvragen());
-                  $perPage = 8;
+                  $perPage = 6;
                   $totalPages = ceil($totalAanvragen / $perPage);
                   
                   // Make sure to cast the 'page' parameter to an integer
@@ -308,54 +351,63 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
                         $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
                         $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
 
-                        if ($rowCount % 4 === 0) {
-                            // Start a new row after every 4 requests
+                                
+                        if ($rowCount % 3 === 0) {
+                            // Start a new row after every 3 requests
                             echo '<div class="row">';
                         }
                         ?>
-
-                    <div class="uitleenaanvraag">
-                        <?php
-                        $naam = new User();
-                        $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
-                        ?>
-                        <h2> <?php echo $naamaanvraag ?></h2>
-                        <div class="uitleenaanvraagdatums">
-                            <b>Datum van: <?php echo $aanvraag['datum_van'] ?></b><br>
-                            <b>Datum tot: <?php echo $aanvraag['datum_tot'] ?></b><br>
-                            <b>Status: <?php echo $aanvragen->getStatusLabel($aanvraag['status']) ?> </b>
-                        </div>
+                    
+                    <div class="uitleenaanvraag <?php echo getBackgroundColorClass($aanvraag['status']); ?>">
+    <?php
+    $naam = new User();
+    $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
+    ?>
+    <div class="uitlijningaanvragen <?php echo getTextColorClass($aanvraag['status']); ?>">
+        <div class="naamaanvraag">
+            <h2 class="<?php echo getTextColorClass($aanvraag['status']); ?>">
+                <?php echo $naamaanvraag ?>
+            </h2>
+        </div>
+        <div class="<?php echo getTextColorClass($aanvraag['status']); ?>">
+            <b>Datum van:</b> <?php echo $aanvraag['datum_van'] ?><br>
+            <b>Datum tot:</b> <?php echo $aanvraag['datum_tot'] ?><br>
+            <b>Status:</b> <?php echo $aanvragen->getStatusLabel($aanvraag['status']) ?> 
+        </div>
                         <div class="uitleenaanvraagproducten">
                             <br>
-                            <b>Aangevraagde product(en):</b>
+                            <b class="echo getTextAndButtonColorClass($aanvraag['status']);">Aangevraagde product(en):</b>
                             <?php $producten = new UitleenAanvraag();
                                 foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
                             <div class="uitleenaanvraagproduct">
-                                <b><?php echo $product[1] ?></b>
+                                <b class="echo getTextAndButtonColorClass($aanvraag['status']);"><?php echo $product[1] ?></b>
                             </div>
                             <?php } ?>
                         </div>
+                        <div class="aanvraagwittebalk"></div>
                         <div class="uitleenaanvraagbuttons">
                             <form action="uitleen_admin_aanvragen_overzicht.php?status=<?php echo"$status&page=$page";?>" method="post">
-                                <input type="hidden" name="aanvraag_id" value="<?php echo $aanvraag['aanvraag_id'] ?>">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren"
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren <?php echo getButtonColorClass($aanvraag['status']); ?>"
                                     value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleenafkeuren"
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleenafkeuren <?php echo getButtonColorClass($aanvraag['status']); ?>"
                                     value="Afkeuren" onclick="return confirm('Wil je deze aanvraag afkeuren?')">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd"
-                                    value="Ingeleverd"
-                                    onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton "
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd <?php echo getButtonColorClass($aanvraag['status']); ?>"
+                                    value="Ingeleverd" onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
+                                <input type="hidden" name="aanvraag_id" value="<?php echo $aanvraag['aanvraag_id'] ?>">
+                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleenaanvraagverwijderen <?php echo getTextColorClass($aanvraag['status']); ?>"
                                     value="Verwijderen" onclick="return confirm('Wil je deze aanvraag verwijderen?')">
                             </form>
                         </div>
-                    </div>
 
+                    </div>
+                    </div>
                     <?php
+
+
                     $rowCount++;
 
-        if ($rowCount % 4 === 0 || $rowCount === count($currentPageAanvragen)) {
-            // End the row after every 4 requests or at the end of requests
+        if ($rowCount % 3 === 0 || $rowCount === count($currentPageAanvragen)) {
+            // End the row after every 3 requests or at the end of requests
             echo '</div>';
         }
     }

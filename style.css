@@ -2773,8 +2773,8 @@ table {
 
 .pagination-container {
   display: flex;
-  justify-content: center; /* Center horizontally */
-  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
 .requests-pagination {
@@ -2795,6 +2795,145 @@ table {
 
 .requests-pagination .current-page {
   text-decoration: underline;
+}
+
+.uitleenaanvraag {
+
+  width: 33.33%; /* Set equal width for each request to create 3 columns */
+  box-sizing: border-box; /* Include padding and border in the defined width */
+  padding: 15px; /* Adjust padding as needed */
+  margin-bottom: 20px; /* Add margin for spacing between requests */
+  border: 1px solid #ccc; /* Optional: Add a border for visual separation */
+  box-sizing: border-box; /* Optional: Include padding in the defined width */
+  border-radius: 5%;
+  margin-left: 25px;
+}
+
+/* .uitleenaanvraagverwijderen {
+  color: #E66600;
+  background-color: white;
+  border-color: white;
+  width: 90%;
+  border-radius: 10px; 
+  text-align: left;
+  margin-top: 10px;
+} */
+
+/* .uitleengoedkeuren, .uitleenafkeuren, .uitleeningeleverd{
+  color: white;
+  background-color: #E66600;
+  border-color: #E66600;
+  width: 25%;
+  height: 20%;
+  font-size: 60%;
+  border-radius: 10px; 
+  text-align: left;
+  margin-top: 10px;
+} */
+
+.aanvraagwittebalk {
+  height: 1px; /* Adjust the height to your desired line thickness */
+  background-color: white;
+  width: 100%;
+  display: block;
+  margin: 10px 0; /* Add some vertical spacing if needed */
+}
+
+.uitleenaanvraag-ingeleverd {
+  background-color: #A2DBCD;
+}
+
+.uitleenaanvraag-goedgekeurd {
+  background-color: #B0DCB8 ;
+}
+
+.uitleenaanvraag-afgekeurd {
+  background-color: #FFAAA6; 
+}
+
+.uitleenaanvraag-nogbeoordelen {
+  background-color: #F8B682; /* Default background color */
+}
+
+
+.text-default {
+  color: #E66600; /* Default text and button color */
+  font-size: 15px;
+
+}
+
+.text-goedgekeurd {
+  color: #00A319; /* Green text and button color */
+  font-size: 15px;
+}
+
+.text-afgekeurd {
+  color: #FE4A41; /* Red text and button color */
+  font-size: 15px;
+}
+
+.text-ingeleverd {
+  color: #3182B5; /* Blue text and button color */
+  font-size: 15px;
+}
+
+.button-default {
+  color: white;
+  background-color: #E66600;
+  border-color: #E66600;
+  width: 25%;
+  height: 20%;
+  font-size: 60%;
+  border-radius: 10px; 
+  text-align: left;
+  margin-top: 10px;
+
+}
+
+.button-goedgekeurd {
+  color: white;
+  background-color: #00A319;
+  border-color: #00A319;
+  width: 25%;
+  height: 20%;
+  font-size: 60%;
+  border-radius: 10px; 
+  text-align: left;
+  margin-top: 10px;
+}
+
+.button-afgekeurd {
+  color: white;
+  background-color: #FE4A41;
+  border-color: #FE4A41;
+  width: 25%;
+  height: 20%;
+  font-size: 60%;
+  border-radius: 10px; 
+  text-align: left;
+  margin-top: 10px;
+}
+
+.button-ingeleverd {
+  color: white;
+  background-color: #3182B5 ;
+  border-color: #3182B5;
+  width: 25%;
+  height: 20%;
+  font-size: 60%;
+  border-radius: 10px; 
+  text-align: left;
+  margin-top: 10px;
+}
+
+.uitleenaanvraagverwijderen {
+  color: inherit; /* Inherit the background color from the parent container */
+  border-color: #DAE5EF;
+  background-color: #DAE5EF;
+  width: 90%;
+  border-radius: 10px;
+  text-align: left;
+  margin-top: 10px;
 }
 
 .filteropties {
@@ -2818,11 +2957,11 @@ table {
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background-color: #F8B682;
+  background-color: #E66600;
   text-align: center; 
   line-height: 25px;
   font-size: 15px;
-  color: black;
+  color: #141C28;
   font-weight: bold;
 }
 
@@ -2836,7 +2975,7 @@ table {
   text-align: center;
   line-height: 25px;
   font-size: 15px;
-  color: black;
+  color: #141C28;
   font-weight: bold;
 }
 
@@ -2849,7 +2988,7 @@ table {
   text-align: center;
   line-height: 25px;
   font-size: 15px;
-  color: black;
+  color: #141C28;
   font-weight: bold;
 }
 
@@ -2862,7 +3001,7 @@ table {
   text-align: center;
   line-height: 25px;
   font-size: 15px; 
-  color: black;
+  color: #141C28;
   text-decoration: none;
   font-weight: bold; 
 }
@@ -2876,7 +3015,7 @@ table {
   text-align: center;
   line-height: 25px;
   font-size: 15px;
-  color: black;
+  color: #141C28;
   font-weight: bold;
 }
 
