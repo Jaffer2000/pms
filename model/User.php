@@ -90,4 +90,23 @@ class User
         return $username;
     }
 
+    public function getAllStudents() {
+        try {
+            $sql = $this->connect()->prepare("SELECT `username`, `naam` FROM `users` WHERE `accounttype` IN (?, ?)");
+            $accountTypes = array('Student', 'IVS Managament');
+            $sql->bind_param("ss", $accountTypes[0], $accountTypes[1]);
+            $sql->execute();
+            $result = $sql->get_result();
+    
+            $students = array();
+            while ($row = $result->fetch_assoc()) {
+                $students[] = $row;
+            }
+    
+            return $students;
+        } catch (Exception $e) {
+            // Handle the exception, log the error, or return an empty array based on your requirement.
+            return array();
+        }
+    }
 }
