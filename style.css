@@ -2799,44 +2799,23 @@ table {
 
 .uitleenaanvraag {
 
-  width: 33.33%; /* Set equal width for each request to create 3 columns */
-  box-sizing: border-box; /* Include padding and border in the defined width */
-  padding: 15px; /* Adjust padding as needed */
-  margin-bottom: 20px; /* Add margin for spacing between requests */
-  border: 1px solid #ccc; /* Optional: Add a border for visual separation */
-  box-sizing: border-box; /* Optional: Include padding in the defined width */
+  width: 33.33%;
+  box-sizing: border-box; 
+  padding: 15px; 
+  margin-bottom: 20px; 
+  border: 1px solid #ccc; 
+  box-sizing: border-box; 
   border-radius: 5%;
   margin-left: 25px;
 }
 
-/* .uitleenaanvraagverwijderen {
-  color: #E66600;
-  background-color: white;
-  border-color: white;
-  width: 90%;
-  border-radius: 10px; 
-  text-align: left;
-  margin-top: 10px;
-} */
-
-/* .uitleengoedkeuren, .uitleenafkeuren, .uitleeningeleverd{
-  color: white;
-  background-color: #E66600;
-  border-color: #E66600;
-  width: 25%;
-  height: 20%;
-  font-size: 60%;
-  border-radius: 10px; 
-  text-align: left;
-  margin-top: 10px;
-} */
 
 .aanvraagwittebalk {
-  height: 1px; /* Adjust the height to your desired line thickness */
+  height: 1px;
   background-color: white;
   width: 100%;
   display: block;
-  margin: 10px 0; /* Add some vertical spacing if needed */
+  margin: 10px 0; 
 }
 
 .uitleenaanvraag-ingeleverd {
@@ -2852,28 +2831,28 @@ table {
 }
 
 .uitleenaanvraag-nogbeoordelen {
-  background-color: #F8B682; /* Default background color */
+  background-color: #F8B682; 
 }
 
 
 .text-default {
-  color: #E66600; /* Default text and button color */
+  color: #E66600;
   font-size: 15px;
 
 }
 
 .text-goedgekeurd {
-  color: #00A319; /* Green text and button color */
+  color: #00A319; 
   font-size: 15px;
 }
 
 .text-afgekeurd {
-  color: #FE4A41; /* Red text and button color */
+  color: #FE4A41;
   font-size: 15px;
 }
 
 .text-ingeleverd {
-  color: #3182B5; /* Blue text and button color */
+  color: #3182B5; 
   font-size: 15px;
 }
 
@@ -2930,7 +2909,7 @@ table {
 }
 
 .uitleenaanvraagverwijderen {
-  color: inherit; /* Inherit the background color from the parent container */
+  color: inherit; 
   border-color: #DAE5EF;
   background-color: #DAE5EF;
   width: 90%;
@@ -3022,8 +3001,10 @@ table {
   font-weight: bold;
 }
 
-
-
 .alleaanvragen{
   margin-left: 10px;
+}
+
+.rowhomepage{
+  width: 60%;
 }
