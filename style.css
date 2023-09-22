@@ -3008,3 +3008,16 @@ table {
 .rowhomepage{
   width: 60%;
 }
+
+.gg-format-slash {
+  box-sizing: border-box;
+  color: white;
+  position: relative;
+  margin-right: 4px;
+  display: block;
+  transform: rotate(25deg) scale(var(--ggs,1));
+  width: 4px;
+  height: 25px;
+  background: currentColor;
+  border-radius: 3px
+}
