@@ -2847,7 +2847,7 @@ table {
 }
 
 .uitleenaanvraag-nogbeoordelen {
-  background-color: #f8b682; /* Default background color */
+  background-color: #f8b682;
 }
 
 .circle-ingeleverd {
@@ -2863,26 +2863,26 @@ table {
 }
 
 .circle-nogbeoordelen {
-  background-color: #e66600; /* Default background color */
+  background-color: #e66600;
 }
 
 .text-default {
-  color: #e66600; /* Default text and button color */
+  color: #e66600;
   font-size: 13px;
 }
 
 .text-goedgekeurd {
-  color: #00a319; /* Green text and button color */
+  color: #00a319;
   font-size: 13px;
 }
 
 .text-afgekeurd {
-  color: #fe4a41; /* Red text and button color */
+  color: #fe4a41;
   font-size: 13px;
 }
 
 .text-ingeleverd {
-  color: #3182b5; /* Blue text and button color */
+  color: #3182b5;
   font-size: 13px;
 }
 
@@ -2943,7 +2943,7 @@ table {
 }
 
 .uitleenaanvraagverwijderen {
-  color: inherit; /* Inherit the background color from the parent container */
+  color: inherit;
   border-style: none;
   background-color: #dae5ef;
   text-align: left;
@@ -3062,7 +3062,7 @@ table {
 }
 
 .uitleenaanvraagbutton i {
-  padding-left: 290px; /* Adjust the margin as needed */
+  padding-left: 290px;
 }
 
 .uitlijningaanvragen {
@@ -3075,19 +3075,19 @@ table {
 
 .icon-wrapper {
   position: absolute;
-  top: 83%; /* Center vertically */
-  right: 12px; /* Adjust position */
-  transform: translateY(-50%); /* Center vertically */
+  top: 83%;
+  right: 12px;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 13px; /* Adjust size of the circle */
-  height: 13px; /* Adjust size of the circle */
-  border-radius: 50%; /* Create a circle */
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
 }
 
 .icon-wrapper i {
-  font-size: 7px; /* Adjust the icon size as needed */
+  font-size: 7px;
   color: #dae5ef;
 }
 
