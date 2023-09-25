@@ -626,7 +626,7 @@ $offset = ($page - 1) * $requestsPerPage;
 $uitleenAanvraag = new UitleenAanvraag();
 
 // Prepare the query with LIMIT and OFFSET
-$query = "SELECT aanvraag_id, datum_van, datum_tot, status FROM aanvragen WHERE user_id = $userId ORDER BY aanvraag_id ASC LIMIT $requestsPerPage OFFSET $offset";
+$query = "SELECT aanvraag_id, datum_van, datum_tot, status FROM aanvragen WHERE user_id = $userId ORDER BY aanvraag_id DESC LIMIT $requestsPerPage OFFSET $offset";
 
 // Execute the query
 $result = $conn->query($query);
@@ -646,9 +646,9 @@ if ($result) {
 
         // Start a new row after every 3 requests
         if ($counter % $requestsPerRow === 0) {
-            echo '<div class="row ">';
+            echo '<div class="row">';
         }
-        
+
         echo '<div class="project-box-wrapper">';
         echo '<div class="project-box" style="background-color: ', $BGcolor ,';">';
         echo '<div class="project-box-content-header">';

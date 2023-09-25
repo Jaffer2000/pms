@@ -29,11 +29,11 @@ if ($_POST != NULL) {
 if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
     // Haalt ID op uit het formulier
     $aanvraagId = $_POST['aanvraag_id'];
- 
+
     // Verwijderd de item uit de DB
     $query = "DELETE FROM aanvragen WHERE aanvraag_id = $aanvraagId";
     $result = mysqli_query($conn, $query);
- 
+
     // Kijkt of er errors zijn
     if (!$result) {
         echo "Er is iets fout gegaan met het verwijderen van de aanvraag: " . mysqli_error($conn);
@@ -47,47 +47,58 @@ if (isset($_POST['action']) && $_POST['action'] == 'Verwijderen') {
 function getBackgroundColorClass($status) {
     switch ($status) {
         case '2':
-            return 'uitleenaanvraag-ingeleverd'; // Define a CSS class for green background
+            return 'uitleenaanvraag-ingeleverd'; 
         case '1':
-            return 'uitleenaanvraag-goedgekeurd'; // Define a CSS class for red background
+            return 'uitleenaanvraag-goedgekeurd'; 
         case '3':
-            return 'uitleenaanvraag-afgekeurd'; // Define a CSS class for blue background
+            return 'uitleenaanvraag-afgekeurd';
         default:
-            return 'uitleenaanvraag-nogbeoordelen'; // Define a default CSS class
+            return 'uitleenaanvraag-nogbeoordelen';
     }
-} 
+}
 
 function getTextColorClass($status) {
     switch ($status) {
         case 0:
-            return 'text-default'; // Use a CSS class name for the default text and button color
+            return 'text-default';
         case 1:
-            return 'text-goedgekeurd'; // Use a CSS class name for green text and button color
+            return 'text-goedgekeurd';
         case 2:
-            return 'text-ingeleverd'; // Use a CSS class name for red text and button color
+            return 'text-ingeleverd';
         case 3:
-            return 'text-afgekeurd'; // Use a CSS class name for blue text and button color
+            return 'text-afgekeurd';
         default:
-            return 'text-default'; // Use a CSS class name for the default text and button color
+            return 'text-default';
     }
 }
 
 function getButtonColorClass($status) {
     switch ($status) {
         case 0:
-            return 'button-default'; // Use a CSS class name for the default text and button color
+            return 'button-default'; 
         case 1:
-            return 'button-goedgekeurd'; // Use a CSS class name for green text and button color
+            return 'button-goedgekeurd';
         case 2:
-            return 'button-ingeleverd'; // Use a CSS class name for red text and button color
+            return 'button-ingeleverd';
         case 3:
-            return 'button-afgekeurd'; // Use a CSS class name for blue text and button color
+            return 'button-afgekeurd';
         default:
-            return 'text-and-button-default'; // Use a CSS class name for the default text and button color
+            return 'text-and-button-default';
     }
 }
 
-
+function getCircleColorClass($status) {
+    switch ($status) {
+        case '2':
+            return 'circle-ingeleverd'; 
+        case '1':
+            return 'circle-goedgekeurd'; 
+        case '3':
+            return 'circle-afgekeurd'; 
+        default:
+            return 'circle-nogbeoordelen'; 
+    }
+}
 
 ?>
 
@@ -241,7 +252,7 @@ function getButtonColorClass($status) {
                 <div class="projects-section-header">
                     <p>Aanvragen overzicht</p>
                     <div>
-                        <?php 
+                        <?php
                     // Check if a filter option was submitted
                     if(isset($_GET['status'])) {
                         $selectedStatus = $_GET['status'];
@@ -294,10 +305,11 @@ function getButtonColorClass($status) {
                     <div class="projects-status">
                         <div class="item-status">
                             <form action="" method="post" class="statusformulier statusformaanvragen">
-                                
-                                <div class="status-type"><span class="nogbeoordelen"
-                                        ><?php echo $resultnogbeoordelen ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=0" class="filterbutton filteraanvraagoverzicht" >Nog beoordelen</a><i class="fa-solid fa-arrow-right"
-                                        style="color:white; margin-left:6px;"></i></div>
+
+                                <div class="status-type"><span class="nogbeoordelen"><?php echo $resultnogbeoordelen ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=0"
+                                        class="filterbutton filteraanvraagoverzicht">Nog beoordelen</a><i
+                                        class="fa-solid fa-arrow-right" style="color:white; margin-left:6px;"></i></div>
 
                                 <div class="status-type"><span class="goedgekeurd"
                                        ><?php echo $resultgoedgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=1" class="filterbutton filteraanvraagoverzicht" >Goedgekeurd</a><i
@@ -310,12 +322,13 @@ function getButtonColorClass($status) {
                                       ><?php echo $resultafgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3" class=" filterbutton filteraanvraagoverzicht" >Afgekeurd</a><i
                                         class="fa-solid fa-arrow-right" style="color:white; margin-left:6px;"></i></div>
 
-                                <div class="status-type"><span class="ingeleverd"
-                                        ><?php echo $resultingeleverd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=2" class=" filterbutton filteraanvraagoverzicht" >Ingeleverd</a></div>
+                                <div class="status-type"><span class="ingeleverd"><?php echo $resultingeleverd ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=2"
+                                        class=" filterbutton filteraanvraagoverzicht">Ingeleverd</a></div>
                             </form>
-                            <div class="status-type alleaanvragen" style="margin-left:"><span class="alle"
-                                    ><?php echo$resultalle ?></span><a href="uitleen_admin_aanvragen_overzicht.php?status=all"
-                                    class="filterbutton"><b style="margin-right:5px;"> Allen</b></a></div>
+                            <div class="status-type alleaanvragen"><span class="alle"><?php echo$resultalle ?></span><a
+                                    href="uitleen_admin_aanvragen_overzicht.php?status=all" class="filterbutton"><b
+                                        style="margin-right:5px;"> Allen</b></a></div>
                         </div>
                     </div>
                     <div style="margin-top: 10px; margin-right: -50px; font-size: 14px;">
@@ -339,35 +352,35 @@ function getButtonColorClass($status) {
                   $totalAanvragen = count($aanvragen->getAllAanvragen());
                   $perPage = 6;
                   $totalPages = ceil($totalAanvragen / $perPage);
-                  
+
                   // Make sure to cast the 'page' parameter to an integer
                   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-                  
+
                   $start = ($page - 1) * $perPage;
                   $end = $start + $perPage;
 
-                
+
                   // Update this line to get the selected status from the query parameter
                   $selectedStatus = isset($_GET['status']) ? $_GET['status'] : 'all';
                   $selectedStudent = isset($_GET['student']) ? $_GET['student'] : '';
-                  
+
                   $allAanvragen = $aanvragen->getAllAanvragen();
-                  
+
                   // Filter the requests based on the selected status and student
                   $filteredAanvragen = ($selectedStatus === 'all') ?
                       $allAanvragen :
                       array_filter($allAanvragen, function ($aanvraag) use ($selectedStatus) {
                           return $aanvraag['status'] === $selectedStatus;
                       });
-                  
+
                   // Further filter based on selected student if a student is selected
                   if ($selectedStudent) {
                       $filteredAanvragen = array_filter($filteredAanvragen, function ($aanvraag) use ($selectedStudent) {
                           return $aanvraag['naamaanvraag'] === $selectedStudent;
                       });
                   }
-                  
-                  
+
+
                     $currentPageAanvragen = array_slice($filteredAanvragen, $start, $perPage);
                     $rowCount = 0; // Counter for tracking the number of requests in a row
 
@@ -375,59 +388,78 @@ function getButtonColorClass($status) {
                         $aanvraag['datum_van'] = date("d-m-Y", strtotime($aanvraag['datum_van']));
                         $aanvraag['datum_tot'] = date("d-m-Y", strtotime($aanvraag['datum_tot']));
 
-                                
+
                         if ($rowCount % 3 === 0) {
                             // Start a new row after every 3 requests
                             echo '<div class="row">';
                         }
                         ?>
-                    
-                    <div class="uitleenaanvraag <?php echo getBackgroundColorClass($aanvraag['status']); ?>">
-    <?php
-    $naam = new User();
-    $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
-    ?>
-    <div class="uitlijningaanvragen <?php echo getTextColorClass($aanvraag['status']); ?>">
-        <div class="naamaanvraag">
-            <h2 class="<?php echo getTextColorClass($aanvraag['status']); ?>">
-                <?php echo $naamaanvraag ?>
-            </h2>
-        </div>
-        <div class="<?php echo getTextColorClass($aanvraag['status']); ?>">
-            <b>Datum van:</b> <?php echo $aanvraag['datum_van'] ?><br>
-            <b>Datum tot:</b> <?php echo $aanvraag['datum_tot'] ?><br>
-            <b>Status:</b> <?php echo $aanvragen->getStatusLabel($aanvraag['status']) ?> 
-        </div>
-                        <div class="uitleenaanvraagproducten">
-                            <br>
-                            <b class="echo getTextAndButtonColorClass($aanvraag['status']);">Aangevraagde product(en):</b>
-                            <?php $producten = new UitleenAanvraag();
-                                foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
-                            <div class="uitleenaanvraagproduct">
-                                <b class="echo getTextAndButtonColorClass($aanvraag['status']);"><?php echo $product[1] ?></b>
+
+                    <div class="uitleenaanvraag-box-wrapper">
+                        <div class="uitleenaanvraag <?php echo getBackgroundColorClass($aanvraag['status']); ?>">
+                            <?php
+                                $naam = new User();
+                                $naamaanvraag = $naam->getUserUsername($aanvraag['naamaanvraag']);
+                                ?>
+                            <div class="uitlijningaanvragen <?php echo getTextColorClass($aanvraag['status']); ?>">
+                                <div class="naamaanvraag">
+                                    <p class="<?php echo getTextColorClass($aanvraag['status']); ?>"><b>
+                                            <?php echo $naamaanvraag ?></b>
+                                    </p>
+                                </div>
+                                <div class="info-request-wrapper">
+                                    <div class="<?php echo getTextColorClass($aanvraag['status']); ?>">
+                                        <b>Datum van:</b> <?php echo $aanvraag['datum_van'] ?><br>
+                                        <b>Datum tot:</b> <?php echo $aanvraag['datum_tot'] ?><br>
+                                        <b>Status:</b> <?php echo $aanvragen->getStatusLabel($aanvraag['status']) ?>
+                                    </div>
+                                    <div class="uitleenaanvraagproducten">
+                                        <br>
+                                        <b class="echo getTextAndButtonColorClass($aanvraag['status']);">Aangevraagde
+                                            product(en):</b>
+                                        <?php $producten = new UitleenAanvraag();
+                                        foreach ($producten->getAanvraagProducten($aanvraag['aanvraag_id']) as $product) { ?>
+                                        <div class="uitleenaanvraagproduct">
+                                            <span class="echo getTextAndButtonColorClass($aanvraag['status']);">
+                                                <?php echo $product[1] ?></span>
+                                        </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                                <div class="request-box-footer">
+                                    <div class="uitleenaanvraagbuttons">
+                                        <form
+                                            action="uitleen_admin_aanvragen_overzicht.php?status=<?php echo"$status&page=$page";?>"
+                                            method="post">
+                                            <input type="submit" name="action"
+                                                class="uitleenaanvraagbutton uitleengoedkeuren <?php echo getButtonColorClass($aanvraag['status']); ?>"
+                                                value="Goedkeuren"
+                                                onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
+                                            <input type="submit" name="action"
+                                                class="uitleenaanvraagbutton uitleenafkeuren <?php echo getButtonColorClass($aanvraag['status']); ?>"
+                                                value="Afkeuren"
+                                                onclick="return confirm('Wil je deze aanvraag afkeuren?')">
+                                            <input type="submit" name="action"
+                                                class="uitleenaanvraagbutton uitleeningeleverd <?php echo getButtonColorClass($aanvraag['status']); ?>"
+                                                value="Ingeleverd"
+                                                onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
+                                            <input type="submit" name="action" value="Verwijderen"
+                                                class="deleterequestbutton uitleenaanvraagverwijderen <?php echo getTextColorClass($aanvraag['status']); ?>"
+                                                onclick="return confirm('Wil je deze aanvraag verwijderen?')">
+                                            <span
+                                                class="icon-wrapper <?php echo getCircleColorClass($aanvraag['status']); ?>">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </span>
+                                            <input type="hidden" name="aanvraag_id"
+                                                value="<?php echo $aanvraag['aanvraag_id'] ?>">
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <?php } ?>
                         </div>
-                        <div class="aanvraagwittebalk"></div>
-                        <div class="uitleenaanvraagbuttons">
-                            <form action="uitleen_admin_aanvragen_overzicht.php?status=<?php echo"$status&page=$page";?>" method="post">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleengoedkeuren <?php echo getButtonColorClass($aanvraag['status']); ?>"
-                                    value="Goedkeuren" onclick="return confirm('Wil je deze aanvraag goedkeuren?')">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleenafkeuren <?php echo getButtonColorClass($aanvraag['status']); ?>"
-                                    value="Afkeuren" onclick="return confirm('Wil je deze aanvraag afkeuren?')">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleeningeleverd <?php echo getButtonColorClass($aanvraag['status']); ?>"
-                                    value="Ingeleverd" onclick="return confirm('Wil je deze aanvraag als ingeleverd markeren?')">
-                                <input type="hidden" name="aanvraag_id" value="<?php echo $aanvraag['aanvraag_id'] ?>">
-                                <input type="submit" name="action" class="uitleenaanvraagbutton uitleenaanvraagverwijderen <?php echo getTextColorClass($aanvraag['status']); ?>"
-                                    value="Verwijderen" onclick="return confirm('Wil je deze aanvraag verwijderen?')">
-                            </form>
-                        </div>
+                    </div>
 
-                    </div>
-                    </div>
                     <?php
-
-
                     $rowCount++;
 
         if ($rowCount % 3 === 0 || $rowCount === count($currentPageAanvragen)) {
@@ -437,78 +469,79 @@ function getButtonColorClass($status) {
     }
     ?>
 
-</div>
-<div class="stickypagination">
-    <?php
-     
-    // Check if the "all" filter is applied
-    $isAllFilter = ($selectedStatus === 'all' && $selectedStudent === 'all');
-    
-    // Calculate the total number of pages based on the filtered results
-    if ($isAllFilter) {
-        $totalPages = ceil(count($allAanvragen) / $perPage);
-    } else {
-        $totalPages = ceil(count($filteredAanvragen) / $perPage);
-    }
-    
-    if ($totalPages > 1) {
-        echo '<div class="pagination">';
-    
-        if ($page > 1) {
-            // Include the current filter criteria in the pagination link
-            echo '<a href="?page=1&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
-        } else {
-            echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
-        }
-    
-        // Determine the range of pages to display
-        $numPagesToShow = min($totalPages, 5); // Number of pages to show (adjust as needed)
-    
-        // Calculate the start and end page numbers for the pagination
-        $startPage = max(1, $page - 2);
-        $endPage = min($totalPages, $page + 2);
-    
-        if ($startPage > 1) {
-            // Add "..." after the first page
-            echo '<span style="margin-right:20px;">...</span>';
-        }
-    
-        // Display the pages
-        for ($i = $startPage; $i <= $endPage; $i++) {
-            $activeClass = ($i == $page) ? 'active' : '';
-            // Include both 'page', 'status', and 'student' parameters in the pagination link
-            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
-        }
-    
-        if ($endPage < $totalPages) {
-            // Add "..." before the last page
-            echo '<span style="margin-right:20px;">...</span>';
-        }
-    
-        // Display the last 3 spages
-        for ($i = $endPage; $i <= $startPage; $i++) {
-            $activeClass = ($i == $page) ? 'active' : '';
-            // Include both 'page', 'status', and 'student' parameters in the pagination link
-            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
-        }
-        
-    
-        if ($page < $totalPages) {
-            // Include the current filter criteria in the pagination link
-            echo '<a href="?page=' . $totalPages . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" style="color: var(--main-color); margin-left:10px;">></a>';
-        } else {
-            echo '<span style="color: var(--main-color); margin-left:10px; opacity: 0.5;">></span>';
-        }
-    
-        echo '</div>';
-    } elseif ($totalPages == 0) {
-        echo 'Er zijn geen aanvragen.';
-    }
-    
-    ?>
-    </div>
+                    <?php
+
+                    // Calculate the total number of pages based on the filtered results
+                    $totalFilteredPages = ceil(count($filteredAanvragen) / $perPage);
+
+                    // Modify the $totalPages variable to use $totalFilteredPages when filtering is applied
+                    $totalPages = ($selectedStatus === 'all') ? ceil($totalAanvragen / $perPage) : $totalFilteredPages;
+
+                    if ($totalPages > 1) {
+                        echo '<div class="pagination">';
+
+                        // Display the pages based on $totalFilteredPages when filtering is applied
+                        for ($i = 2; $i <= $totalFilteredPages - 1; $i++) {
+                            $activeClass = ($i == $page) ? 'active' : '';
+                            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
+                        }
+
+                        if ($page > 1) {
+                            // Include the current filter criteria in the pagination link
+                            echo '<a href="?page=' . ($page - 1) . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
+                        } else {
+                            echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
+                        }
+
+                        // Display the first page
+                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '">1</a>';
+
+                        // Display the ellipsis if there are more than 3 pages
+                        if ($totalPages > 3) {
+                            if ($page > 3) {
+                                echo '<span style="margin-right:20px;">...</span>';
+                            }
+                            // Determine the start and end page numbers to display
+                            $startPage = max(2, $page - 1);
+                            $endPage = min($totalPages - 1, $startPage + 2);
+
+                            // Display the pages within the range
+                            for ($i = $startPage; $i <= $endPage; $i++) {
+                                $activeClass = ($i == $page) ? 'active' : '';
+                                // Include both 'page', 'status', and 'student' parameters in the pagination link
+                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
+                            }
+
+                            // Display the ellipsis if there are more pages after the displayed range
+                            if ($totalPages > $endPage) {
+                                echo '<span style="margin-right:20px;">...</span>';
+                            }
+                        } else {
+                            // Display all pages if there are 3 or fewer pages
+                            for ($i = 2; $i <= $totalPages - 1; $i++) {
+                                $activeClass = ($i == $page) ? 'active' : '';
+                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
+                            }
+                        }
+
+                        // Display the last page
+                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == $totalPages ? ' text-decoration: underline;' : '') . '" href="?page=' . $totalPages . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) .'">' . $totalPages . '</a>';
+
+                        if ($page < $totalPages) {
+                            // Include the current filter criteria in the pagination link
+                            echo '<a href="?page=' . ($page + 1) . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" style="color: var(--main-color); margin-left:10px;">></a>';
+                        } else {
+                            echo '<span style="color: var(--main-color); margin-left:10px; opacity: 0.5;">></span>';
+                        }
+
+                        echo '</div>';
+                    } elseif ($totalPages == 0) {
+                        echo 'Er zijn geen aanvragen.';
+                    }
+
+                    ?>
                 </div>
-               
+            </div>
         </div>
         <!-- partial -->
         <script src="script/script.js"></script>
@@ -562,17 +595,17 @@ function getButtonColorClass($status) {
 if (isset($_POST["nogbeoordelen"])) {
     $result = $nogbeoordelen;
     $resultCheck = $resultnogbeoordelen;
-  } elseif (isset($_POST["goedgekeurd"])) {    
+  } elseif (isset($_POST["goedgekeurd"])) {
     $result = $goedgekeurd;
     $resultCheck = $resultgoedgekeurd;
-  } elseif (isset($_POST["afgekeurd"])) {    
+  } elseif (isset($_POST["afgekeurd"])) {
     $result = $afgekeurd;
     $resultCheck = $resultafgekeurd;
-  } elseif (isset($_POST["ingeleverd"])) {    
+  } elseif (isset($_POST["ingeleverd"])) {
     $result = $ingeleverd;
     $resultCheck = $resultingeleverd;
   } else  {
-    $result = $alle; 
+    $result = $alle;
     $resultCheck = $resultalle;
   }
 

@@ -129,6 +129,11 @@ a {
   margin-right: 10px;
 }
 
+.uitleenaanvraagbutton i {
+  float: right;
+  margin-right: 10px;
+}
+
 .buttonmodal-presentie {
   color: #1f2634;
   background-color: rgba(255, 255, 255, 0.6);
@@ -1148,13 +1153,6 @@ p.box-progress-text {
   padding-bottom: 5px;
 }
 
-.support-box-footer {
-  display: flex;
-  justify-content: center;
-  padding-top: 16px;
-  position: relative;
-}
-
 .project-box-footer:after {
   content: "";
   position: absolute;
@@ -1163,6 +1161,31 @@ p.box-progress-text {
   top: 0;
   left: -16px;
   height: 1px;
+}
+
+.request-box-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 16px;
+  position: relative;
+  padding-bottom: 5px;
+}
+
+.request-box-footer:after {
+  content: "";
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.6);
+  width: calc(100% + 35px);
+  top: 0;
+  left: -19px;
+  height: 1px;
+}
+
+.support-box-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+  position: relative;
 }
 
 .participants {
@@ -2688,8 +2711,19 @@ table {
 }
 
 .uitleenaanvraag {
-  margin-right: 60px;
-  margin-bottom: 10px;
+  padding: 16px;
+  box-sizing: border-box;
+  border-radius: 25px;
+  display: block;
+  animation: bounce-in 0.5s ease;
+}
+
+.uitleenaanvraag-box-wrapper {
+  width: 33.33%;
+  padding: 8px;
+  display: block;
+  box-sizing: border-box;
+  transition: 0.2s;
 }
 
 .uitleenproducttextinput {
@@ -2755,11 +2789,6 @@ table {
   margin-bottom: 20px;
 }
 
-.uitleenaanvraag {
-  flex: 0 0 calc(25% - 10px);
-  margin: 5px;
-}
-
 .pagination {
   padding-top: 0px;
 }
@@ -2797,125 +2826,137 @@ table {
   text-decoration: underline;
 }
 
-.uitleenaanvraag {
-
-  width: 33.33%;
-  box-sizing: border-box; 
-  padding: 15px; 
-  margin-bottom: 20px; 
-  border: 1px solid #ccc; 
-  box-sizing: border-box; 
-  border-radius: 5%;
-  margin-left: 25px;
-}
-
-
 .aanvraagwittebalk {
   height: 1px;
   background-color: white;
   width: 100%;
   display: block;
-  margin: 10px 0; 
+  margin: 18px 0;
 }
 
 .uitleenaanvraag-ingeleverd {
-  background-color: #A2DBCD;
+  background-color: #a2dbcd;
 }
 
 .uitleenaanvraag-goedgekeurd {
-  background-color: #B0DCB8 ;
+  background-color: #b0dcb8;
 }
 
 .uitleenaanvraag-afgekeurd {
-  background-color: #FFAAA6; 
+  background-color: #ffaaa6;
 }
 
 .uitleenaanvraag-nogbeoordelen {
-  background-color: #F8B682; 
+  background-color: #f8b682;
 }
 
+.circle-ingeleverd {
+  background-color: #3182b5;
+}
+
+.circle-goedgekeurd {
+  background-color: #00a319;
+}
+
+.circle-afgekeurd {
+  background-color: #fe4a41;
+}
+
+.circle-nogbeoordelen {
+  background-color: #e66600;
+}
 
 .text-default {
-  color: #E66600;
-  font-size: 15px;
-
+  color: #e66600;
+  font-size: 13px;
 }
 
 .text-goedgekeurd {
-  color: #00A319; 
-  font-size: 15px;
+  color: #00a319;
+  font-size: 13px;
 }
 
 .text-afgekeurd {
-  color: #FE4A41;
-  font-size: 15px;
+  color: #fe4a41;
+  font-size: 13px;
 }
 
 .text-ingeleverd {
-  color: #3182B5; 
-  font-size: 15px;
+  color: #3182b5;
+  font-size: 13px;
 }
 
 .button-default {
   color: white;
-  background-color: #E66600;
-  border-color: #E66600;
-  width: 25%;
-  height: 20%;
-  font-size: 60%;
-  border-radius: 10px; 
-  text-align: left;
-  margin-top: 10px;
-
+  background-color: #e66600;
+  font-size: 12px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  padding: 6px 16px;
+  font-weight: 700;
+  border-style: none;
+  cursor: pointer;
+  font-family: "Sen", sans-serif;
+  margin-right: 4px;
 }
 
 .button-goedgekeurd {
   color: white;
-  background-color: #00A319;
-  border-color: #00A319;
-  width: 25%;
-  height: 20%;
-  font-size: 60%;
-  border-radius: 10px; 
-  text-align: left;
-  margin-top: 10px;
-  text-align: center;
+  background-color: #00a319;
+  font-size: 12px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  padding: 6px 16px;
+  font-weight: 700;
+  border-style: none;
+  cursor: pointer;
+  font-family: "Sen", sans-serif;
+  margin-right: 4px;
 }
 
 .button-afgekeurd {
   color: white;
-  background-color: #FE4A41;
-  border-color: #FE4A41;
-  width: 25%;
-  height: 20%;
-  font-size: 60%;
-  border-radius: 10px; 
-  text-align: left;
-  margin-top: 10px;
-  text-align: center;
+  background-color: #fe4a41;
+  font-size: 12px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  padding: 6px 16px;
+  font-weight: 700;
+  border-style: none;
+  cursor: pointer;
+  font-family: "Sen", sans-serif;
+  margin-right: 4px;
 }
 
 .button-ingeleverd {
   color: white;
-  background-color: #3182B5 ;
-  border-color: #3182B5;
-  width: 25%;
-  height: 20%;
-  font-size: 60%;
-  border-radius: 10px; 
-  text-align: left;
-  margin-top: 10px;
-  text-align: center;
+  background-color: #3182b5;
+  font-size: 12px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  padding: 6px 16px;
+  font-weight: 700;
+  border-style: none;
+  cursor: pointer;
+  font-family: "Sen", sans-serif;
+  margin-right: 4px;
 }
 
 .uitleenaanvraagverwijderen {
-  color: inherit; 
-  border-color: #DAE5EF;
-  background-color: #DAE5EF;
-  width: 90%;
-  border-radius: 10px;
+  color: inherit;
+  border-style: none;
+  background-color: #dae5ef;
   text-align: left;
   margin-top: 10px;
+  font-size: 12px;
+  width: 100%;
+  border-radius: 20px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Sen", sans-serif;
 }
 
 .filteropties {
@@ -2924,12 +2965,11 @@ table {
   border-color: #1f2634;
 }
 
-.statusformaanvragen{
+.statusformaanvragen {
   height: 40px;
 }
 
-.filteraanvraagoverzicht{
-  color: white;
+.filteraanvraagoverzicht {
   padding-left: 5px;
   text-decoration: none;
 }
@@ -2939,38 +2979,37 @@ table {
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background-color: #E66600;
-  text-align: center; 
+  background-color: #e66600;
+  text-align: center;
   line-height: 25px;
   font-size: 15px;
-  color: #141C28;
+  color: #141c28;
   font-weight: bold;
 }
-
 
 .goedgekeurd {
   display: inline-block;
   width: 25px;
   height: 25px;
-  border-radius: 50%; 
-  background-color: #00A319; 
+  border-radius: 50%;
+  background-color: #00a319;
   text-align: center;
   line-height: 25px;
   font-size: 15px;
-  color: #141C28;
+  color: #141c28;
   font-weight: bold;
 }
 
-.afgekeurd{
+.afgekeurd {
   display: inline-block;
   width: 25px;
   height: 25px;
-  border-radius: 50%; 
-  background-color: #FE4A41; 
+  border-radius: 50%;
+  background-color: #fe4a41;
   text-align: center;
   line-height: 25px;
   font-size: 15px;
-  color: #141C28;
+  color: #141c28;
   font-weight: bold;
 }
 
@@ -2978,35 +3017,85 @@ table {
   display: inline-block;
   width: 25px;
   height: 25px;
-  border-radius: 50%; 
-  background-color: #A2DBCD; 
+  border-radius: 50%;
+  background-color: #a2dbcd;
   text-align: center;
   line-height: 25px;
-  font-size: 15px; 
-  color: #141C28;
+  font-size: 15px;
+  color: #141c28;
   text-decoration: none;
-  font-weight: bold; 
+  font-weight: bold;
 }
 
 .alle {
   display: inline-block;
   width: 25px;
   height: 25px;
-  border-radius: 50%; 
+  border-radius: 50%;
   background-color: white;
   text-align: center;
   line-height: 25px;
   font-size: 15px;
-  color: #141C28;
+  color: #141c28;
   font-weight: bold;
 }
 
-.alleaanvragen{
+.alleaanvragen {
   margin-left: 10px;
 }
 
-.rowhomepage{
-  width: 60%;
+.naamaanvraag {
+  font-weight: 700;
+  margin-top: -12px;
+  margin-left: 3px;
+  padding-bottom: 20px;
+  font-family: "Sen", sans-serif;
+}
+
+.naamaanvraag b {
+  font-weight: bolder;
+  font-size: 20px;
+}
+
+.info-request-wrapper {
+  font-size: 13px;
+}
+
+.uitleenaanvraagbutton i {
+  padding-left: 290px;
+}
+
+.uitlijningaanvragen {
+  margin-left: 3px;
+}
+
+.uitleenaanvraagproducten {
+  padding-bottom: 15px;
+}
+
+.icon-wrapper {
+  position: absolute;
+  top: 83%;
+  right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+}
+
+.icon-wrapper i {
+  font-size: 7px;
+  color: #dae5ef;
+}
+
+.deleterequestbutton {
+  position: relative;
+  margin-top: 6px;
+  margin-bottom: -5px;
+  width: 102%;
 }
 
 .gg-format-slash {
