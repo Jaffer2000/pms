@@ -2826,6 +2826,17 @@ table {
   text-decoration: underline;
 }
 
+.uitleenaanvraag {
+  width: 33.33%;
+  box-sizing: border-box;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 5%;
+  margin-left: 25px;
+}
+
 .aanvraagwittebalk {
   height: 1px;
   background-color: white;
