@@ -3110,3 +3110,19 @@ table {
   background: currentColor;
   border-radius: 3px
 }
+
+.geenaanvraagtekst{
+  color: white;
+}
+
+.geenaanvraagtekst{
+  position: fixed;
+}
+
+.stickypagination {
+  position: sticky;
+  bottom: 0; /* Stick to the bottom of the parent container */
+  background-color: white; /* Add a background color to make it stand out */
+  z-index: 100; /* Ensure it appears above the content */
+  margin-top: 20px; /* Add margin at the top for spacing */
+}
