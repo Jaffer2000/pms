@@ -474,7 +474,7 @@ function getCircleColorClass($status) {
 $totalFilteredPages = ceil(count($filteredAanvragen) / $perPage);
 
 // Modify the $totalPages variable to use $totalFilteredPages when filtering is applied
-$totalPages = ($selectedStatus === 'all') ? ceil($totalAanvragen / $perPage) : $totalFilteredPages;
+$totalPages = ($selectedStatus === 'all') ? ceil(count($filteredAanvragen) / $perPage) : $totalFilteredPages;
 
 if ($totalPages > 1) {
     echo '<div class="pagination">';
@@ -532,6 +532,7 @@ if ($totalPages > 1) {
     echo 'Er zijn geen aanvragen.';
 }
 ?>
+
 
                 </div>
             </div>
