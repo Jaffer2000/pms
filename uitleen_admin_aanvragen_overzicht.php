@@ -311,15 +311,18 @@ function getCircleColorClass($status) {
                                         class="filterbutton filteraanvraagoverzicht">Nog beoordelen</a><i
                                         class="fa-solid fa-arrow-right" style="color:white; margin-left:6px;"></i></div>
 
-                                <div class="status-type"><span class="goedgekeurd"
-                                       ><?php echo $resultgoedgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=1" class="filterbutton filteraanvraagoverzicht" >Goedgekeurd</a><i
-                                        class="fa-solid fa-forward-slash" style="color:white; margin-left:6px;"></i></div>
-                                     
-                                        <div class="status-type"> 
-                                            <i class="gg-format-slash eigenslashopmaak" ></i>
-                                        </div>
-                                <div class="status-type"><span class="afgekeurd"
-                                      ><?php echo $resultafgekeurd ?> </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3" class=" filterbutton filteraanvraagoverzicht" >Afgekeurd</a><i
+                                <div class="status-type"><span class="goedgekeurd"><?php echo $resultgoedgekeurd ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=1"
+                                        class="filterbutton filteraanvraagoverzicht">Goedgekeurd</a><i
+                                        class="fa-solid fa-forward-slash" style="color:white; margin-left:6px;"></i>
+                                </div>
+
+                                <div class="status-type">
+                                    <i class="gg-format-slash eigenslashopmaak"></i>
+                                </div>
+                                <div class="status-type"><span class="afgekeurd"><?php echo $resultafgekeurd ?>
+                                    </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3"
+                                        class=" filterbutton filteraanvraagoverzicht">Afgekeurd</a><i
                                         class="fa-solid fa-arrow-right" style="color:white; margin-left:6px;"></i></div>
 
                                 <div class="status-type"><span class="ingeleverd"><?php echo $resultingeleverd ?>
@@ -469,7 +472,7 @@ function getCircleColorClass($status) {
     }
     ?>
 
-<?php
+                    <?php
 // Calculate the total number of pages based on the filtered results
 $totalFilteredPages = ceil(count($filteredAanvragen) / $perPage);
 
