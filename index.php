@@ -635,8 +635,8 @@ $result = $conn->query($query);
 if ($result) {
     // Fetch the data from the result set
     $counter = 0;
-
-    echo '<div class="requests-section" id="requests-section">';
+    
+    echo '<div class="requests-section rowhomepage" id="requests-section">';
     
     while ($row = $result->fetch_assoc()) {
         $aanvraagId = $row['aanvraag_id'];

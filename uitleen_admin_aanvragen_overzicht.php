@@ -317,6 +317,9 @@ function getCircleColorClass($status) {
                                         class="fa-solid fa-forward-slash" style="color:white; margin-left:6px;"></i>
                                 </div>
 
+                                <div class="status-type">
+                                    <i class="gg-format-slash eigenslashopmaak"></i>
+                                </div>
                                 <div class="status-type"><span class="afgekeurd"><?php echo $resultafgekeurd ?>
                                     </span><a href="uitleen_admin_aanvragen_overzicht.php?status=3"
                                         class=" filterbutton filteraanvraagoverzicht">Afgekeurd</a><i
@@ -470,76 +473,70 @@ function getCircleColorClass($status) {
     ?>
 
                     <?php
+// Calculate the total number of pages based on the filtered results
+$totalFilteredPages = ceil(count($filteredAanvragen) / $perPage);
 
-                    // Calculate the total number of pages based on the filtered results
-                    $totalFilteredPages = ceil(count($filteredAanvragen) / $perPage);
+// Modify the $totalPages variable to use $totalFilteredPages when filtering is applied
+$totalPages = ($selectedStatus === 'all') ? ceil(count($filteredAanvragen) / $perPage) : $totalFilteredPages;
 
-                    // Modify the $totalPages variable to use $totalFilteredPages when filtering is applied
-                    $totalPages = ($selectedStatus === 'all') ? ceil($totalAanvragen / $perPage) : $totalFilteredPages;
+if ($totalPages > 1) {
+    echo '<div class="pagination">';
 
-                    if ($totalPages > 1) {
-                        echo '<div class="pagination">';
+    if ($page > 1) {
+        // Include the current filter criteria in the pagination link
+        echo '<a href="?page=' . ($page - 1) . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
+    } else {
+        echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
+    }
 
-                        // Display the pages based on $totalFilteredPages when filtering is applied
-                        for ($i = 2; $i <= $totalFilteredPages - 1; $i++) {
-                            $activeClass = ($i == $page) ? 'active' : '';
-                            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
-                        }
+    // Display the first page
+    echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '">1</a>';
 
-                        if ($page > 1) {
-                            // Include the current filter criteria in the pagination link
-                            echo '<a href="?page=' . ($page - 1) . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" style="color: var(--main-color); margin-right:20px;"><</a>';
-                        } else {
-                            echo '<span style="color: var(--main-color); margin-right:20px; opacity: 0.5;"><</span>';
-                        }
+    // Display the ellipsis if there are more than 3 pages
+    if ($totalPages > 3) {
+        if ($page > 3) {
+            echo '<span style="margin-right:20px;">...</span>';
+        }
+        // Determine the start and end page numbers to display
+        $startPage = max(2, $page - 1);
+        $endPage = min($totalPages - 1, $startPage + 2);
 
-                        // Display the first page
-                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == 1 ? ' text-decoration: underline;' : '') . '" href="?page=1&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '">1</a>';
+        // Display the pages within the range
+        for ($i = $startPage; $i <= $endPage; $i++) {
+            $activeClass = ($i == $page) ? 'active' : '';
+            // Include both 'page', 'status', and 'student' parameters in the pagination link
+            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
+        }
 
-                        // Display the ellipsis if there are more than 3 pages
-                        if ($totalPages > 3) {
-                            if ($page > 3) {
-                                echo '<span style="margin-right:20px;">...</span>';
-                            }
-                            // Determine the start and end page numbers to display
-                            $startPage = max(2, $page - 1);
-                            $endPage = min($totalPages - 1, $startPage + 2);
+        // Display the ellipsis if there are more pages after the displayed range
+        if ($totalPages > $endPage) {
+            echo '<span style="margin-right:20px;">...</span>';
+        }
+    } else {
+        // Display all pages if there are 3 or fewer pages
+        for ($i = 2; $i <= $totalPages - 1; $i++) {
+            $activeClass = ($i == $page) ? 'active' : '';
+            echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
+        }
+    }
 
-                            // Display the pages within the range
-                            for ($i = $startPage; $i <= $endPage; $i++) {
-                                $activeClass = ($i == $page) ? 'active' : '';
-                                // Include both 'page', 'status', and 'student' parameters in the pagination link
-                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
-                            }
+    // Display the last page
+    echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == $totalPages ? ' text-decoration: underline;' : '') . '" href="?page=' . $totalPages . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '">' . $totalPages . '</a>';
 
-                            // Display the ellipsis if there are more pages after the displayed range
-                            if ($totalPages > $endPage) {
-                                echo '<span style="margin-right:20px;">...</span>';
-                            }
-                        } else {
-                            // Display all pages if there are 3 or fewer pages
-                            for ($i = 2; $i <= $totalPages - 1; $i++) {
-                                $activeClass = ($i == $page) ? 'active' : '';
-                                echo '<a style="color: var(--main-color); margin-right:20px;' . ($i == $page ? ' text-decoration: underline;' : '') . '" href="?page=' . $i . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" class="' . $activeClass . '">' . $i . '</a>';
-                            }
-                        }
+    if ($page < $totalPages) {
+        // Include the current filter criteria in the pagination link
+        echo '<a href="?page=' . ($page + 1) . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" style="color: var(--main-color); margin-left:10px;">></a>';
+    } else {
+        echo '<span style="color: var(--main-color); margin-left:10px; opacity: 0.5;">></span>';
+    }
 
-                        // Display the last page
-                        echo '<a style="color: var(--main-color); margin-right:20px;' . ($page == $totalPages ? ' text-decoration: underline;' : '') . '" href="?page=' . $totalPages . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) .'">' . $totalPages . '</a>';
+    echo '</div>';
+} elseif ($totalPages == 0) {
+    echo 'Er zijn geen aanvragen.';
+}
+?>
 
-                        if ($page < $totalPages) {
-                            // Include the current filter criteria in the pagination link
-                            echo '<a href="?page=' . ($page + 1) . '&status=' . urlencode($selectedStatus) . '&student=' . urlencode($selectedStudent) . '" style="color: var(--main-color); margin-left:10px;">></a>';
-                        } else {
-                            echo '<span style="color: var(--main-color); margin-left:10px; opacity: 0.5;">></span>';
-                        }
 
-                        echo '</div>';
-                    } elseif ($totalPages == 0) {
-                        echo 'Er zijn geen aanvragen.';
-                    }
-
-                    ?>
                 </div>
             </div>
         </div>

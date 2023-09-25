@@ -2613,18 +2613,23 @@ table {
 .label.color-blue {
   background-color: #6f9ad1;
 }
+
 .label.color-red {
   background-color: #d37c7c;
 }
+
 .label.color-green {
   background-color: #23b73e;
 }
+
 .label.color-grey {
   background-color: #999999;
 }
+
 .label.color-yellow {
   background-color: #e9d641;
 }
+
 .label.color-purple {
   background-color: #9f83d1;
 }
@@ -2762,10 +2767,8 @@ table {
 }
 
 .pagination {
-  position: fixed;
-  bottom: 45px;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-left: auto;
+  margin-right: auto;
   color: var(--main-color);
   font-size: 18px;
 }
@@ -2781,16 +2784,15 @@ table {
 .uitleenaanvragenoverzichtaanvragen.scroll {
   max-height: 450px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
 
 .row {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 20px;
-}
-
-.pagination {
-  padding-top: 0px;
 }
 
 #naamaanvraag {
@@ -3096,4 +3098,25 @@ table {
   margin-top: 6px;
   margin-bottom: -5px;
   width: 102%;
+}
+
+.gg-format-slash {
+  box-sizing: border-box;
+  color: white;
+  position: relative;
+  margin-right: 4px;
+  display: block;
+  transform: rotate(25deg) scale(var(--ggs, 1));
+  width: 4px;
+  height: 25px;
+  background: currentColor;
+  border-radius: 3px;
+}
+
+.geenaanvraagtekst {
+  color: white;
+}
+
+.geenaanvraagtekst {
+  position: fixed;
 }

@@ -232,7 +232,7 @@ class UitleenAanvraag {
     {
         $return_array = array();
 
-        $query = "SeLeCt * FrOm `aanvragen` limit 1;";
+        $query = "Select * from `aanvragen` limit 1;";
         $result = $this->connect()->query($query);
         
         // For all database results:
