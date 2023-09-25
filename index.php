@@ -652,16 +652,16 @@ if ($result) {
         echo '<div class="project-box-wrapper">';
         echo '<div class="project-box" style="background-color: ', $BGcolor ,';">';
         echo '<div class="project-box-content-header">';
-        echo '<div class="naamaanvraag"><b>Van: &nbsp; </b>', date('d-m-Y', strtotime($datumVan)), '</div>';
-        echo '<div class="naamaanvraag"><b>Tot: &nbsp; </b>', date('d-m-Y', strtotime($datumTot)), '</div>';
-        echo '<div class="naamaanvraag"><b>Status: &nbsp;</b>', $uitleenAanvraag->getStatusLabel($status), '</div>';
+        echo '<div class="naamaanvraag1"><b>Van: &nbsp; </b>', date('d-m-Y', strtotime($datumVan)), '</div>';
+        echo '<div class="naamaanvraag1"><b>Tot: &nbsp; </b>', date('d-m-Y', strtotime($datumTot)), '</div>';
+        echo '<div class="naamaanvraag1"><b>Status: &nbsp;</b>', $uitleenAanvraag->getStatusLabel($status), '</div>';
 
         $producten = $uitleenAanvraag->getAanvraagProducten($aanvraagId);
         $productNames = [];
         foreach ($producten as $product) {
             $productNames[] = $product['1']; // Access the product name using $product['1']
         }
-        echo '<div class="naamaanvraag"><b>Product(en):</b> &nbsp;', implode(", ", $productNames), '</div>';
+        echo '<div class="naamaanvraag1"><b>Product(en):</b> &nbsp;', implode(", ", $productNames), '</div>';
 
         echo '</div></div></div>';
 
